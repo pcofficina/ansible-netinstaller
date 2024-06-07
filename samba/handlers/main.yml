@@ -1,0 +1,7 @@
+---
+# handlers file for role/samba
+
+- name: Restart samba
+  ansible.builtin.service:
+    name: smbd
+    state: restarted

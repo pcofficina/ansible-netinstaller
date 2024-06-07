@@ -1,0 +1,114 @@
+#!ipxe
+
+# Some menu defaults
+set menu-timeout 15000
+set submenu-timeout ${menu-timeout}
+isset ${menu-default} || set menu-default reboot
+isset ${submenu-default} || set submenu-default back
+
+# Figure out if client is 64-bit capable
+cpuid --ext 29 && set arch x64 || set arch x86
+cpuid --ext 29 && set archl amd64 || set archl i386
+
+###################### MAIN MENU ####################################
+
+:start
+menu iPXE boot menu for ${net0/ip} - (${arch}:${archl} - ${platform})
+item --gap --                           ------------------------- Operating Systems ------------------------------
+item --gap --                           -------------- Linux Mint 21.3 XFCE - PCOfficina remix -------------------
+item --key 0x107e   mint-live           (F5) Boot Live
+item --key 0x127e   mint-live-compat    (F6) Boot Live - Compatibility Mode
+item --key 0x137e   mint-install        (F7) Install Unattended
+item --key 0x147e   mint-install-oem    (F8) Install (OEM) Unattended
+item --gap --                           -------------- Windows 10 (x86_64) Home / Pro - PCOfficina remix -------------------
+item --key 0x157e   win-install         (F9) Install Unattended
+item --gap --                           ------------------------- Tools and utilities ----------------------------
+item --key 0x167e   memtest             (F10) Run Memtest86+ v7.00
+item --gap --                           ------------------------- Advanced options -------------------------------
+item --key c config                     (C) Configure settings
+item shell                              Drop to iPXE shell
+item reboot                             Reboot computer
+item
+item --key x exit         (X) Exit iPXE and continue ${platform} boot
+choose --timeout ${menu-timeout} --default ${menu-default} selected || goto cancel
+set menu-timeout 0
+goto ${selected}
+
+:cancel
+echo You cancelled the menu, dropping you to a shell
+
+:shell
+echo Type 'exit' to get the back to the menu
+shell
+set menu-timeout 0
+set submenu-timeout 0
+goto start
+
+:failed
+echo Booting failed, dropping to shell
+goto shell
+
+:reboot
+reboot
+
+:exit
+exit
+
+:config
+config
+goto start
+
+:back
+set submenu-timeout 0
+clear submenu-default
+goto start
+
+############ OSes ############
+
+:mint-live
+initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive --
+boot || goto failed
+goto start
+
+:mint-live-compat
+initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive noapic noacpi irqpoll nomodeset --
+boot || goto failed
+goto start
+
+:mint-install
+initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ lan_ip }}/{{ linuxmint_dir }}/production-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash automatic-ubiquity --
+boot || goto failed
+goto start
+
+:mint-install-oem
+initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ lan_ip }}/{{ linuxmint_dir }}/oem-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash automatic-ubiquity --
+boot || goto failed
+goto start
+
+:win-install
+kernel http://{{ lan_ip }}/{{ win10_dir }}/wimboot
+initrd http://{{ lan_ip }}/{{ win10_dir }}/install.bat          install.bat
+initrd http://{{ lan_ip }}/{{ win10_dir }}/winpeshl.ini         winpeshl.ini
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/bcd         BCD
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/boot.sdi    boot.sdi
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/sources/boot.wim boot.wim
+boot || goto failed
+goto start
+
+
+############ TOOLS ############
+
+:memtest
+iseq ${platform} efi && goto memtest_efi || goto memtest_bios
+
+:memtest_efi
+chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.efi - || goto failed
+goto start
+
+:memtest_bios
+chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.bin - || goto failed
+goto start

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+IPXE_URL="https://boot.ipxe.org"
+# IPXE_FILE_LIST="ipxe.efi ipxe.pxe"
+IPXE_FILE_LIST="{{ ipxe_file_list | join(' ') }}"
+TODAY=`date +%Y%m%d`
+TFTP_BOOT={{ ipxe_basedir }}
+
+if [ -d $TFTP_BOOT ]; then
+        cd $TFTP_BOOT;
+else
+        echo "ERROR: Missing TFTP root path: $TFTP_BOOT. Exiting"
+        exit 1
+fi
+
+for IPXE_FILE in $IPXE_FILE_LIST; do
+        curl $IPXE_URL/$IPXE_FILE  -o $IPXE_FILE.$TODAY && rm -f $IPXE_FILE && ln $IPXE_FILE.$TODAY $IPXE_FILE
+done
+

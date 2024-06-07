@@ -1,0 +1,11 @@
+---
+# handlers file for role/nftables
+- name: Reload sysctl
+  ansible.builtin.command: sysctl -p
+  register: sysctl_output # <- Registers the command output.
+  changed_when: sysctl_output.rc != 0 # <- Uses the return code to define when the task has changed.
+
+- name: Reload nftables
+  ansible.builtin.service:
+    name: nftables
+    state: restarted

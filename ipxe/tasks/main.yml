@@ -1,0 +1,52 @@
+---
+# tasks file for role/ipxe
+- name: Ensure ipxe root directory exists [{{ ipxe_basedir }}]
+  ansible.builtin.file:
+    path: "{{ ipxe_basedir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Install curl
+  ansible.builtin.apt:
+    name: curl
+    state: latest
+
+- name: Deploy ipxe-updater.sh
+  ansible.builtin.template:
+    src: templates/ipxe-updater.sh.j2
+    dest: "{{ ipxe_basedir }}/ipxe-updater.sh"
+    mode: '0744'
+  notify: Run IPXE updater
+
+- name: Get IPXE files status
+  ansible.builtin.stat:
+    path: "{{ ipxe_basedir }}/{{ item }}"
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  with_items: "{{ ipxe_file_list }}"
+  register: ipxe_file_status
+
+- name: Check if any IPXE file is missing
+  ansible.builtin.set_fact:
+    ipxe_file_missing: "{{ ipxe_file_missing | default(false) or not item.stat.exists }}"
+  with_items: "{{ ipxe_file_status.results }}"
+  changed_when: ipxe_file_missing
+  notify: Run IPXE updater
+
+# Run this only if all expected files are in place
+- name: Check if any IPXE file is older than 1 week
+  ansible.builtin.set_fact:
+    ipxe_is_old: "{{ (ansible_date_time.epoch | int) - (item.stat.mtime | int) > 7 * 24 * 60 * 60 }}"
+  with_items: "{{ ipxe_file_status.results }}"
+  when: not ipxe_file_missing
+  changed_when: ipxe_is_old
+  notify: Run IPXE updater
+
+- name: Deploy menu.ipxe
+  ansible.builtin.template:
+    src: templates/menu.ipxe.j2
+    dest: "{{ ipxe_basedir }}/menu.ipxe"
+    mode: '0644'

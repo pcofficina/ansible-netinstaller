@@ -1,0 +1,7 @@
+---
+# tasks file for role/apt-update-cache
+- name: Ansible apt update cache if it is older than 1 day
+  register: updatesys
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: "{{ apt_cache_valid_time }}"

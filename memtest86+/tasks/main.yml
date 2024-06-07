@@ -1,0 +1,28 @@
+---
+# tasks file for roles/memtest86+
+- name: Ensure memtest86+ root directory exists [{{ memtest_basedir }}]
+  ansible.builtin.file:
+    path: "{{ memtest_basedir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Get memtest archive with checksum url (sha256)
+  ansible.builtin.get_url:
+    url: "{{ memtest_archive_url }}"
+    dest: "{{ memtest_basedir }}"
+    checksum: "sha256:{{ memtest_archive_256sum }}"
+    mode: '0644'
+
+- name: Install zip
+  ansible.builtin.apt:
+    name: zip
+    state: latest
+
+- name: Extract memtest exes {{ memtest_exes }}
+  ansible.builtin.unarchive:
+    src: "{{ memtest_basedir }}/{{ memtest_archive_name }}"
+    dest: "{{ memtest_basedir }}"
+    remote_src: true
+    include: "{{ memtest_exes }}"

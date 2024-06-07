@@ -1,0 +1,9 @@
+---
+# tasks file for role/basepath
+- name: Ensure basepath directory exists [{{ os_basedir }}]
+  ansible.builtin.file:
+    path: "{{ os_basedir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root

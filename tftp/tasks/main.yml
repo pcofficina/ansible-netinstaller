@@ -1,0 +1,58 @@
+---
+# tasks file for role/tftp
+- name: Install TFTP server
+  ansible.builtin.apt:
+    name: atftpd
+    state: latest
+
+- name: Deploy atftpd configuration
+  ansible.builtin.template:
+    src: templates/atftpd.j2
+    dest: /etc/default/atftpd
+    mode: '0644'
+  notify: Do atftpd.socket daemon-reload restart
+
+# file module will create a directory if missing
+- name: Create atftpd.socket.d directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/atftpd.socket.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+# template module will create a file
+- name: Deploy atftpd.socket drop-in
+  ansible.builtin.template:
+    src: override.conf.j2
+    dest: /etc/systemd/system/atftpd.socket.d/override.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Do atftpd.socket daemon-reload restart # Don't forget to do `systemctl daemon-reload`!
+
+- name: Get status of /srv/tftp
+  ansible.builtin.stat:
+    path: /srv/tftp
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: srv_tftp_status
+
+- name: Remove dir /srv/tftp
+  ansible.builtin.file:
+    path: /srv/tftp
+    state: absent
+  when: srv_tftp_status.stat.isdir is true
+
+- name: Ensure symbolic link exist from /srv/tftp to {{ ipxe_basedir }}
+  ansible.builtin.file:
+    src: "{{ ipxe_basedir }}"
+    dest: /srv/tftp
+    state: link
+
+- name: Ensure atftpd server is running
+  ansible.builtin.service:
+    name: atftpd.socket
+    enabled: true
+    state: started

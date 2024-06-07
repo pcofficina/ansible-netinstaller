@@ -1,0 +1,10 @@
+---
+# defaults file for role/dhcp
+lan_ip: 10.0.0.1
+lan_net: 10.0.0.0
+lan_netmask: 24
+lan_interface: eth0
+lan_ip_pool_start: 10.0.0.99
+lan_ip_pool_end: 10.0.0.199
+
+apparmor_conf: /etc/apparmor.d/usr.sbin.kea-dhcp4

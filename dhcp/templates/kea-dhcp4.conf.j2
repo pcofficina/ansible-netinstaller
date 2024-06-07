@@ -1,0 +1,204 @@
+{
+
+"Dhcp4": {
+    // Add names of your network interfaces to listen on.
+    "interfaces-config": {
+        // See section 8.2.4 for more details. You probably want to add just
+        // interface name (e.g. "eth0" or specific IPv4 address on that
+        // interface name (e.g. "eth0/192.0.2.1").
+        "interfaces": [ "{{ lan_interface }}" ]
+    },
+
+    "control-socket": {
+        "socket-type": "unix",
+        "socket-name": "/tmp/kea4-ctrl-socket"
+    },
+
+    "lease-database": {
+        "type": "memfile",
+        "lfc-interval": 3600
+    },
+
+    "expired-leases-processing": {
+        "reclaim-timer-wait-time": 10,
+        "flush-reclaimed-timer-wait-time": 25,
+        "hold-reclaimed-time": 3600,
+        "max-reclaim-leases": 100,
+        "max-reclaim-time": 250,
+        "unwarned-reclaim-cycles": 5
+    },
+
+    // Global timers specified here apply to all subnets, unless there are
+    // subnet specific values defined in particular subnets.
+    "renew-timer": 900,
+    "rebind-timer": 1800,
+    "valid-lifetime": 3600,
+
+    "option-data": [
+        {
+            "name": "domain-name-servers",
+            "data": "9.9.9.9, 8.8.8.8"
+        }
+
+        // Domain search is also a popular option. It tells the client to
+        // attempt to resolve names within those specified domains. For
+        // example, name "foo" would be attempted to be resolved as
+        // foo.mydomain.example.com and if it fails, then as foo.example.com
+        /// {
+        ///    "name": "domain-search",
+        ///    "data": "mydomain.example.com, example.com"
+        ///},
+
+    ],
+
+    "client-classes": [
+     {
+        "name": "iPXE",
+        "test": "substring(option[77].hex,0,4) == 'iPXE'",
+        "boot-file-name": "http://{{ lan_ip }}/{{ ipxe_dir }}/menu.ipxe"
+      },
+
+      {
+        "name": "Legacy PXE",
+        "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00000'",
+        # "boot-file-name": "undionly.kpxe"
+        "boot-file-name": "ipxe.pxe"
+      },
+     {
+        "name": "UEFI-64-1",
+        "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00007'",
+        "boot-file-name": "ipxe.efi"
+      }, {
+        "name": "UEFI-64-2",
+        "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00008'",
+        "boot-file-name": "ipxe.efi"
+      }, {
+        "name": "UEFI-64-3",
+        "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00009'",
+        "boot-file-name": "ipxe.efi"
+      }
+     
+    ],
+
+    // Below an example of a simple IPv4 subnet declaration. Uncomment to enable
+    // it. This is a list, denoted with [ ], of structures, each denoted with
+    // { }. Each structure describes a single subnet and may have several
+    // parameters. One of those parameters is "pools" that is also a list of
+    // structures.
+    "subnet4": [
+        {
+            // This defines the whole subnet. Kea will use this information to
+            // determine where the clients are connected. This is the whole
+            // subnet in your network. This is mandatory parameter for each
+            // subnet.
+            "subnet": "{{lan_net}}/{{lan_netmask}}",
+
+            // Pools define the actual part of your subnet that is governed
+            // by Kea. Technically this is optional parameter, but it's
+            // almost always needed for DHCP to do its job. If you omit it,
+            // clients won't be able to get addresses, unless there are
+            // host reservations defined for them.
+            "pools": [ { "pool": "{{ lan_ip_pool_start }} - {{ lan_ip_pool_end }}" } ],
+
+            // These are options that are subnet specific. In most cases,
+            // you need to define at least routers option, as without this
+            // option your clients will not be able to reach their default
+            // gateway and will not have Internet connectivity.
+            "option-data": [
+                {
+                    // For each IPv4 subnet you most likely need to specify at
+                    // least one router.
+                    "name": "routers",
+                    "data": "{{ lan_ip }}"
+                }
+            ],
+
+            // Kea offers host reservations mechanism. Kea supports reservations
+            // by several different types of identifiers: hw-address
+            // (hardware/MAC address of the client), duid (DUID inserted by the
+            // client), client-id (client identifier inserted by the client) and
+            // circuit-id (circuit identifier inserted by the relay agent).
+            //
+            // Kea also support flexible identifier (flex-id), which lets you
+            // specify an expression that is evaluated for each incoming packet.
+            // Resulting value is then used for as an identifier.
+            //
+            // Note that reservations are subnet-specific in Kea. This is
+            // different than ISC DHCP. Keep that in mind when migrating
+            // your configurations.
+	   "reservations": [
+                {
+                    "hostname"  : "lab1-pc04",
+                    "hw-address": "ac:16:2d:08:e8:bb",
+                    "ip-address": "192.168.0.54"
+                }, {
+                    "hostname"  : "lab1-pc01",
+                    "hw-address": "52:54:00:48:56:7d",
+                    "ip-address": "192.168.0.51"
+                }, {
+                    "hostname"  : "lab1-pc02",
+                    "hw-address": "52:54:00:d5:65:9b",
+                    "ip-address": "192.168.0.52"
+                }, {
+                    "hostname"  : "lab1-pc03",
+                    "hw-address": "52:54:00:7c:be:6e",
+                    "ip-address": "192.168.0.53"
+                }
+            ]
+            // You can add more subnets there.
+        }
+    ],
+
+    // There are many, many more parameters that DHCPv4 server is able to use.
+    // They were not added here to not overwhelm people with too much
+    // information at once.
+
+    // Logging configuration starts here. Kea uses different loggers to log various
+    // activities. For details (e.g. names of loggers), see Chapter 18.
+    "loggers": [
+    {
+        // This section affects kea-dhcp4, which is the base logger for DHCPv4
+        // component. It tells DHCPv4 server to write all log messages (on
+        // severity INFO or more) to a file.
+        "name": "kea-dhcp4",
+        "output_options": [
+            {
+                // Specifies the output file. There are several special values
+                // supported:
+                // - stdout (prints on standard output)
+                // - stderr (prints on standard error)
+                // - syslog (logs to syslog)
+                // - syslog:name (logs to syslog using specified name)
+                // Any other value is considered a name of the file
+                "output": "stdout",
+                // "output": "/var/log/kea-dhcp4.log"
+
+                // Shorter log pattern suitable for use with systemd,
+                // avoids redundant information
+                // "pattern": "%-5p %m\n"
+                "pattern": "%-5p %m\n"
+
+                // This governs whether the log output is flushed to disk after
+                // every write.
+                // "flush": false,
+
+                // This specifies the maximum size of the file before it is
+                // rotated.
+                // "maxsize": 1048576,
+
+                // This specifies the maximum number of rotated files to keep.
+                // "maxver": 8
+            }
+        ],
+        // This specifies the severity of log messages to keep. Supported values
+        // are: FATAL, ERROR, WARN, INFO, DEBUG
+        "severity": "DEBUG",
+
+        // If DEBUG level is specified, this value is used. 0 is least verbose,
+        // 99 is most verbose. Be cautious, Kea can generate lots and lots
+        // of logs if told to do so.
+        "debuglevel": 20
+    }
+  ]
+}
+}

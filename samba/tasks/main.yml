@@ -1,0 +1,35 @@
+---
+# tasks file for role/samba
+- name: Install Samba
+  ansible.builtin.apt:
+    name: samba
+    state: present
+
+- name: Deploy smb.conf
+  ansible.builtin.template:
+    src: templates/smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/bin/testparm -s %s
+    backup: true
+  notify: Restart samba
+
+- name: Ensure smb server is active
+  ansible.builtin.service:
+    name: smbd
+    enabled: true
+    state: started
+
+- name: Ensure nmb server is inactive and disabled
+  ansible.builtin.service:
+    name: nmbd
+    enabled: false
+    state: stopped
+
+# - name: Ensure winbind server is inactive and disabled
+#  ansible.builtin.service:
+#    name: winbind
+#    enabled: false
+#    state: stopped

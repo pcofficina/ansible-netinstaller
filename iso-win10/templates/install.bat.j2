@@ -1,0 +1,13 @@
+wpeinit
+ipconfig
+net view \\{{ lan_ip }}
+net use S: \\{{ lan_ip }}\win10
+(echo Rescan
+echo List Disk
+echo Select Disk 0
+echo List Partition
+)  | diskpart
+net use
+pause
+S:\\amd64\iso\setup.exe
+pause

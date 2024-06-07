@@ -1,0 +1,3 @@
+---
+# defaults file for role/basepath
+os_basedir: /install

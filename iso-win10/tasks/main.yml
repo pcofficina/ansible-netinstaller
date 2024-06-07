@@ -1,0 +1,41 @@
+---
+# tasks file for role/iso-windows
+- name: Ensure Windows 10 root directory exists [{{ os_basedir_win10 }}]
+  ansible.builtin.file:
+    path: "{{ os_basedir_win10 }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Ensure Windows 10 iso directory exists [{{ os_basedir_win10 }}]
+  ansible.builtin.file:
+    path: "{{ os_basedir_win10 }}/iso"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+# - name: Copy boot files
+#   ansible.posix.synchronize:
+#     src: files/
+#     dest: "{{ os_basedir_win10 }}/"
+
+- name: Copy autoinstall files
+  ansible.builtin.copy:
+    src: files/
+    dest: "{{ os_basedir_win10 }}/"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Deploy install.bat template
+  ansible.builtin.template:
+    src: templates/install.bat.j2
+    dest: "{{ os_basedir_win10 }}/install.bat"
+    mode: '0644'
+
+- name: Ensure win10.ipxe is not present anymore
+  ansible.builtin.file:
+    path: "{{ os_basedir_win10 }}/win10.ipxe"
+    state: absent

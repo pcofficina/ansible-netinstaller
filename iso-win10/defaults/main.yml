@@ -1,0 +1,3 @@
+---
+# defaults file for role/iso-windows
+os_basedir_win10: /{{ win10_dir }}

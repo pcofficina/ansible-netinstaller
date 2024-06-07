@@ -1,0 +1,8 @@
+---
+# vars file for roles/memtest86+
+memtest_dir: memtest
+memtest_baseurl: https://www.memtest.org/download/v7.00
+memtest_archive_name: mt86plus_7.00.binaries.zip
+memtest_archive_url: "{{ memtest_baseurl }}/{{ memtest_archive_name }}"
+memtest_archive_256sum: "{{ memtest_baseurl }}/sha256sum.txt"
+memtest_exes: [memtest64.bin, memtest64.efi]

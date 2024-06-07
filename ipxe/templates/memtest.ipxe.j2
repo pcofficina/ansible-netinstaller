@@ -1,0 +1,13 @@
+# this file is included in menu.ipxe:
+# no need to have shebang on top
+
+:memtest
+iseq ${platform} efi && goto memtest_efi || goto memtest_bios
+
+:memtest_efi
+chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.efi - || goto failed
+goto start
+
+:memtest_bios
+chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.bin - || goto failed
+goto start

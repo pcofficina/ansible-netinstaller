@@ -1,0 +1,15 @@
+---
+# tasks file for role/nftables
+- name: Ensure IP Forwarding is enabled
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.d/99-sysctl.conf
+    search_string: 'net.ipv4.ip_forward='
+    line: net.ipv4.ip_forward=1
+  notify: Reload sysctl
+
+- name: Deploy nftables ruleset
+  ansible.builtin.template:
+    src: templates/nftables.conf.j2
+    dest: "/etc/nftables.conf"
+    mode: '0755'
+  notify: Reload nftables

@@ -1,0 +1,30 @@
+# this file is included in menu.ipxe:
+# no need to have shebang on top
+
+# NOTE: DO NOT REUSE key ALREADY DEFINED IN menu.ipxe
+
+###################### Windows MENU ####################################
+
+:menu-windows
+menu iPXE boot menu for ${net0/ip} - ($arch:archl - ${platform})
+item --gap --                   -------------- Windows 10 (x86_64) Home / Pro - PCOfficina remix -------------------
+item --key 0x167e  win-install  (F10) Install Unattended
+
+item
+item --key 0x08 back      Back to top menu...
+###iseq ${menu-default} menu-windows && isset ${submenu-default} && goto menu-windows-timed ||
+choose selected && goto ${selected} || goto start
+###:menu-windows-timed
+###choose --timeout ${submenu-timeout} --default ${submenu-default} selected && goto ${selected} || goto start
+
+############ OSes ############
+
+:win-install
+kernel http://{{ lan_ip }}/{{ win10_dir }}/wimboot
+initrd http://{{ lan_ip }}/{{ win10_dir }}/install.bat          install.bat
+initrd http://{{ lan_ip }}/{{ win10_dir }}/winpeshl.ini         winpeshl.ini
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/bcd         BCD
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/boot.sdi    boot.sdi
+initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/sources/boot.wim boot.wim
+boot || goto failed
+goto start

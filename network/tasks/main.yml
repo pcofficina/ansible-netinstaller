@@ -1,0 +1,34 @@
+---
+# tasks file for role/network
+
+- name: Install NetworkManager
+  ansible.builtin.apt:
+    name: network-manager
+    state: latest
+
+- name: Reconfigure traditional network stack
+  ansible.builtin.copy:
+    src: files/interfaces
+    dest: /etc/network/interfaces
+    mode: '0644'
+
+- name: Ensure NetworkManager is running
+  ansible.builtin.service:
+    name: NetworkManager
+    enabled: true
+    state: started
+
+- name: Add an Ethernet connection with static IP configuration for  "{{ lan_interface }}"
+  community.general.nmcli:
+    conn_name: "{{ lan_interface }}"
+    ifname: "{{ lan_interface }}"
+    type: ethernet
+    ip4: "{{ lan_ip }}/{{ lan_netmask }}"
+    # gw4: "" # this interface IS the GW
+    never_default4: true
+    state: present
+
+- name: Enable connection for  "{{ lan_interface }}"
+  ansible.builtin.command: nmcli connection up "{{ lan_interface }}"
+  register: my_output # <- Registers the command output.
+  changed_when: my_output.rc != 0 # <- Uses the return code to define when the task has changed.

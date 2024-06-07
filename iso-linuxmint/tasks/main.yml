@@ -1,0 +1,50 @@
+---
+# tasks file for role/iso-linuxmint
+
+- name: Ensure LinuxMint root directory exists [{{ os_basedir_linuxmint }}]
+  ansible.builtin.file:
+    path: "{{ os_basedir_linuxmint }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Get status of ISO {{ iso_filename }}
+  ansible.builtin.stat:
+    path: "{{ os_basedir_linuxmint }}/{{ iso_filename }}"
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: iso_file_status
+
+# - name: Check if ISO file is missing
+#   ansible.builtin.set_fact:
+#     iso_file_missing: "{{ not iso_file_status.stat.exists }}"
+#   changed_when: iso_file_missing
+
+- name: Umount ISO {{ iso_filename }}
+  ansible.posix.mount:
+    path: "{{ os_basedir_linuxmint }}/iso"
+    state: unmounted
+  when: iso_file_status.stat.exists
+
+- name: Copy preseed files
+  ansible.builtin.copy:
+    src: files/
+    dest: "{{ os_basedir_linuxmint }}/"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Mount ISO {{ iso_filename }}
+  ansible.posix.mount:
+    path: "{{ os_basedir_linuxmint }}/iso"
+    src: "{{ os_basedir_linuxmint }}/{{ iso_filename }}"
+    fstype: iso9660
+    opts: ro
+    state: mounted
+
+- name: Ensure mint.ipxe is not present anymore
+  ansible.builtin.file:
+    path: "{{ os_basedir_linuxmint }}/mint.ipxe"
+    state: absent

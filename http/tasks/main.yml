@@ -1,0 +1,39 @@
+---
+# tasks file for role/http
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: latest
+
+- name: Deploy vhost "install"
+  ansible.builtin.template:
+    src: templates/install.nginx.j2
+    dest: /etc/nginx/sites-available/install.conf
+    mode: '0644'
+
+- name: Find all enabled vhosts
+  ansible.builtin.find:
+    paths: /etc/nginx/sites-enabled/
+    recurse: false
+    file_type: link
+  register: vhost_to_disable
+
+- name: Disable all vhosts except "install"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ vhost_to_disable.files }}"
+  when: item.path != '/etc/nginx/sites-enabled/install.conf'
+
+- name: Ensure vhost "install" is enabled
+  ansible.builtin.file:
+    dest: /etc/nginx/sites-enabled/install.conf
+    src: /etc/nginx/sites-available/install.conf
+    state: link
+
+- name: Ensure Nginx http server is enabled and running
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+    state: restarted

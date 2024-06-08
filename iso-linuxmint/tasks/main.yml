@@ -22,11 +22,18 @@
 #     iso_file_missing: "{{ not iso_file_status.stat.exists }}"
 #   changed_when: iso_file_missing
 
+- name: Stop NFS service
+  ansible.builtin.systemd_service:
+    name: nfs-server
+    state: stopped
+  register: nfs_stop_result
+  when: iso_file_status.stat.exists
+
 - name: Umount ISO {{ iso_filename }}
   ansible.posix.mount:
     path: "{{ os_basedir_linuxmint }}/iso"
     state: unmounted
-  when: iso_file_status.stat.exists
+  when: iso_file_status.stat.exists and nfs_stop_result.state == "stopped"
 
 - name: Copy preseed files
   ansible.builtin.copy:
@@ -40,7 +47,7 @@
   ansible.posix.mount:
     path: "{{ os_basedir_linuxmint }}/iso"
     src: "{{ os_basedir_linuxmint }}/{{ iso_filename }}"
-    fstype: iso9660
+    fstype: auto # usually iso9660 but win use udf so: auto
     opts: ro
     state: mounted
 

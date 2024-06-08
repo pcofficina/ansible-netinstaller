@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+	<settings pass="oobeSystem">
+		<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<InputLocale>0410:00000410</InputLocale>
+			<SystemLocale>it-IT</SystemLocale>
+			<UILanguage>it-IT</UILanguage>
+			<UILanguageFallback>it-IT</UILanguageFallback>
+			<UserLocale>it-IT</UserLocale>
+		</component>
+		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<TimeZone>W. Europe Standard Time</TimeZone>
+			<AutoLogon>
+				<Enabled>true</Enabled>
+				<LogonCount>9999999</LogonCount>
+				<Username>pco</Username>
+				<Password>
+					<PlainText>false</PlainText>
+					<Value>cABjAG8AUABhAHMAcwB3AG8AcgBkAA==</Value>
+				</Password>
+			</AutoLogon>
+			<OOBE>
+				<HideEULAPage>true</HideEULAPage>
+				<HideLocalAccountScreen>true</HideLocalAccountScreen>
+				<HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+				<HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+				<NetworkLocation>Home</NetworkLocation>
+				<ProtectYourPC>3</ProtectYourPC>
+			</OOBE>
+			<UserAccounts>
+				<LocalAccounts>
+					<LocalAccount wcm:action="add">
+						<Group>Administrators</Group>
+						<Name>pco</Name>
+						<Password>
+							<PlainText>false</PlainText>
+							<Value>cABjAG8AUABhAHMAcwB3AG8AcgBkAA==</Value>
+						</Password>
+					</LocalAccount>
+				</LocalAccounts>
+			</UserAccounts>
+		</component>
+	</settings>
+	<settings pass="specialize">
+		<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<SkipAutoActivation>true</SkipAutoActivation>
+		</component>
+		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<ComputerName>*</ComputerName>
+			<ProductKey>W269N-WFGWX-YVC9B-4J6C9-T83GX</ProductKey>
+		</component>
+	</settings>
+	<settings pass="windowsPE">
+		<component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<InputLocale>0410:00000410</InputLocale>
+			<SystemLocale>it-IT</SystemLocale>
+			<UILanguage>it-IT</UILanguage>
+			<UILanguageFallback>it-IT</UILanguageFallback>
+			<UserLocale>it-IT</UserLocale>
+			<SetupUILanguage>
+				<UILanguage>it-IT</UILanguage>
+			</SetupUILanguage>
+		</component>
+		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64"
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<Diagnostics>
+				<OptIn>false</OptIn>
+			</Diagnostics>
+			<DiskConfiguration>
+				<WillShowUI>OnError</WillShowUI>
+				<Disk wcm:action="add">
+					<DiskID>0</DiskID>
+					<WillWipeDisk>true</WillWipeDisk>
+					<CreatePartitions>
+						<CreatePartition wcm:action="add">
+							<Order>1</Order>
+							<Type>Primary</Type>
+							<Size>100</Size>
+						</CreatePartition>
+						<CreatePartition wcm:action="add">
+							<Extend>true</Extend>
+							<Order>2</Order>
+							<Type>Primary</Type>
+						</CreatePartition>
+					</CreatePartitions>
+					<ModifyPartitions>
+						<ModifyPartition wcm:action="add">
+							<Active>true</Active>
+							<Format>NTFS</Format>
+							<Label>System Reserved</Label>
+							<Order>1</Order>
+							<PartitionID>1</PartitionID>
+							<TypeID>0x27</TypeID>
+						</ModifyPartition>
+						<ModifyPartition wcm:action="add">
+							<Active>true</Active>
+							<Format>NTFS</Format>
+							<Label>OS</Label>
+							<Letter>C</Letter>
+							<Order>2</Order>
+							<PartitionID>2</PartitionID>
+						</ModifyPartition>
+					</ModifyPartitions>
+				</Disk>
+			</DiskConfiguration>
+			<DynamicUpdate>
+				<WillShowUI>OnError</WillShowUI>
+			</DynamicUpdate>
+			<ImageInstall>
+				<OSImage>
+					<WillShowUI>OnError</WillShowUI>
+					<InstallTo>
+						<DiskID>0</DiskID>
+						<PartitionID>2</PartitionID>
+					</InstallTo>
+				</OSImage>
+			</ImageInstall>
+			<UserData>
+				<AcceptEula>true</AcceptEula>
+				<FullName>PCO</FullName>
+				<ProductKey>
+					<Key></Key>
+					<WillShowUI>Never</WillShowUI>
+				</ProductKey>
+			</UserData>
+		</component>
+	</settings>
+</unattend>

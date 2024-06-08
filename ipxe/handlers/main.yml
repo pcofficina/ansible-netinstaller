@@ -2,6 +2,7 @@
 # handlers file for role/ipxe
 
 - name: Run IPXE updater
-  ansible.builtin.command: "{{ ipxe_basedir }}/ipxe-updater.sh"
+  ansible.builtin.command:
+    cmd: "{{ ipxe_basedir }}/ipxe-updater.sh"
   register: my_output # <- Registers the command output.
   changed_when: my_output.rc != 0 # <- Uses the return code to define when the task has changed.

@@ -10,7 +10,7 @@
 
 - name: Install curl
   ansible.builtin.apt:
-    name: curl
+    package: curl
     state: latest
 
 - name: Deploy ipxe-updater.sh
@@ -26,13 +26,13 @@
     get_attributes: false
     get_checksum: false
     get_mime: false
-  with_items: "{{ ipxe_file_list }}"
+  loop: "{{ ipxe_file_list }}"
   register: ipxe_file_status
 
 - name: Check if any IPXE file is missing
   ansible.builtin.set_fact:
     ipxe_file_missing: "{{ ipxe_file_missing | default(false) or not item.stat.exists }}"
-  with_items: "{{ ipxe_file_status.results }}"
+  loop: "{{ ipxe_file_status.results }}"
   changed_when: ipxe_file_missing
   notify: Run IPXE updater
 
@@ -40,7 +40,7 @@
 - name: Check if any IPXE file is older than 1 week
   ansible.builtin.set_fact:
     ipxe_is_old: "{{ (ansible_date_time.epoch | int) - (item.stat.mtime | int) > 7 * 24 * 60 * 60 }}"
-  with_items: "{{ ipxe_file_status.results }}"
+  loop: "{{ ipxe_file_status.results }}"
   when: not ipxe_file_missing
   changed_when: ipxe_is_old
   notify: Run IPXE updater

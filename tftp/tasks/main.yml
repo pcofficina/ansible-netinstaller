@@ -2,7 +2,7 @@
 # tasks file for role/tftp
 - name: Install TFTP server
   ansible.builtin.apt:
-    name: atftpd
+    package: atftpd
     state: latest
 
 - name: Deploy atftpd configuration
@@ -48,7 +48,7 @@
 - name: Ensure symbolic link exist from /srv/tftp to {{ ipxe_basedir }}
   ansible.builtin.file:
     src: "{{ ipxe_basedir }}"
-    dest: /srv/tftp
+    path: /srv/tftp
     state: link
 
 - name: Ensure atftpd server is running

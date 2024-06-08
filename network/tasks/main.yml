@@ -3,7 +3,7 @@
 
 - name: Install NetworkManager
   ansible.builtin.apt:
-    name: network-manager
+    package: network-manager
     state: latest
 
 - name: Reconfigure traditional network stack
@@ -29,6 +29,7 @@
     state: present
 
 - name: Enable connection for  "{{ lan_interface }}"
-  ansible.builtin.command: nmcli connection up "{{ lan_interface }}"
+  ansible.builtin.command:
+    cmd: nmcli connection up "{{ lan_interface }}"
   register: my_output # <- Registers the command output.
   changed_when: my_output.rc != 0 # <- Uses the return code to define when the task has changed.

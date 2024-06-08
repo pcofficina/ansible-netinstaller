@@ -2,7 +2,7 @@
 # tasks file for role/samba
 - name: Install Samba
   ansible.builtin.apt:
-    name: samba
+    package: samba
     state: present
 
 - name: Deploy smb.conf
@@ -20,7 +20,7 @@
   ansible.builtin.service:
     name: smbd
     enabled: true
-    state: started
+    state: restarted
 
 - name: Ensure nmb server is inactive and disabled
   ansible.builtin.service:

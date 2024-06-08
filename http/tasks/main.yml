@@ -3,7 +3,7 @@
 
 - name: Install Nginx
   ansible.builtin.apt:
-    name: nginx
+    package: nginx
     state: latest
 
 - name: Deploy vhost "install"
@@ -28,7 +28,7 @@
 
 - name: Ensure vhost "install" is enabled
   ansible.builtin.file:
-    dest: /etc/nginx/sites-enabled/install.conf
+    path: /etc/nginx/sites-enabled/install.conf
     src: /etc/nginx/sites-available/install.conf
     state: link
 

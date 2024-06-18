@@ -57,10 +57,10 @@ d-i partman/confirm boolean true
 d-i partman-md/confirm boolean true
 
 # Setup OEM (PCOfficina) User (username MUST be "oem" for "oem-config-prepare" to work)
-d-i passwd/user-fullname string PCOfficina
+d-i passwd/user-fullname string oem
 d-i passwd/username string oem
-d-i passwd/user-password password pco
-d-i passwd/user-password-again password pco
+d-i passwd/user-password password oem
+d-i passwd/user-password-again password oem
 d-i user-setup/allow-password-weak boolean true
 d-i passwd/auto-login boolean true
 

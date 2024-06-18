@@ -1,4 +1,4 @@
 ---
 # defaults file for role/ipxe
 ipxe_basedir: /{{ ipxe_dir }}
-ipxe_file_list: [ipxe.efi, ipxe.pxe]
+ipxe_file_list: [ipxe.efi, ipxe.pxe snponly.efi]

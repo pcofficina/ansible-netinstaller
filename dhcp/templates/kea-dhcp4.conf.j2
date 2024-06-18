@@ -67,7 +67,8 @@
      {
         "name": "UEFI-64-1",
         "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00007'",
-        "boot-file-name": "ipxe.efi"
+        // "boot-file-name": "ipxe.efi"
+        "boot-file-name": "snponly.efi"
       }, {
         "name": "UEFI-64-2",
         "test": "substring(option[60].hex,0,20) == 'PXEClient:Arch:00008'",

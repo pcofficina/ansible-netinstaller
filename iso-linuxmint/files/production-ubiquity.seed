@@ -65,8 +65,9 @@ d-i passwd/auto-login boolean false
 d-i netcfg/get_hostname string pcoXXX
 
 # Run Fixes, Updates, Install Packages
-## ubiquity ubiquity/success_command string /cdrom/preseed/production-ubiquity-finish.sh
-ubiquity ubiquity/success_command string chroot /target bash dpkg-reconfigure openssh-server
+# ubiquity ubiquity/success_command string /cdrom/preseed/production-ubiquity-finish.sh
+# will be done by ansible
+# ubiquity ubiquity/success_command string chroot /target bash dpkg-reconfigure openssh-server
 d-i hw-detect/load_firmware boolean true
 d-i pkgsel/upgrade select none
 

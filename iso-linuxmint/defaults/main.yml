@@ -1,4 +1,4 @@
 ---
 # defaults file for role/iso-linuxmint
 os_basedir_linuxmint: /{{ linuxmint_dir }}
-iso_filename: linuxmint-21.3.0-pco-24.06-xfce-64bit.iso
+iso_filename: linuxmint-22.1.0-PCO-2025.03.17-xfce-64bit.iso

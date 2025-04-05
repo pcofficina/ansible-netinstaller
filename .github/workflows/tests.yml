@@ -45,7 +45,7 @@ jobs:
           set([
           '${{ needs.changelog.result }}',
           '${{ needs.sanity.result }}',
-          '${{ needs.unit-galaxy.result }}'
+          '${{ needs.unit-galaxy.result }}',
           '${{ needs.ansible-lint.result }}'
           '${{ needs.unit-source.result }}'
           ])"

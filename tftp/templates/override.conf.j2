@@ -1,3 +1,7 @@
 [Socket]
 ListenDatagram=
 ListenDatagram={{ lan_ip }}:69
+
+[Unit]
+After=network-online.target
+Wants=network-online.target

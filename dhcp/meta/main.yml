@@ -1,6 +1,6 @@
 galaxy_info:
   author: Andrea Perotti
-  description: Role to configure kea-dhcpd
+  description: Role to install and configure kea-dhcpd
   company: Associazione PCOfficina
 
   # If the issue tracker for your role is not on github, uncomment the

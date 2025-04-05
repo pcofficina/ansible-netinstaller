@@ -1,0 +1,67 @@
+---
+# tasks file for role/iso-windows
+- name: Ensure Windows 11 root directory exists [{{ os_basedir_win11 }}]
+  ansible.builtin.file:
+    path: "{{ os_basedir_win11 }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Get status of ISO {{ iso_filename }}
+  ansible.builtin.stat:
+    path: "{{ os_basedir_win11 }}/{{ iso_filename }}"
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: iso_file_status
+
+# - name: Check if ISO file is missing
+#   ansible.builtin.set_fact:
+#     iso_file_missing: "{{ not iso_file_status.stat.exists }}"
+#   changed_when: iso_file_missing
+
+- name: Stop Samba service
+  ansible.builtin.systemd_service:
+    name: smbd
+    state: stopped
+  register: smbd_stop_result
+  when: iso_file_status.stat.exists
+
+- name: Umount ISO {{ iso_filename }}
+  ansible.posix.mount:
+    path: "{{ os_basedir_win11 }}/iso"
+    state: unmounted
+  when: iso_file_status.stat.exists and smbd_stop_result.state == "stopped"
+
+- name: Mount ISO {{ iso_filename }}
+  ansible.posix.mount:
+    path: "{{ os_basedir_win11 }}/iso"
+    src: "{{ os_basedir_win11 }}/{{ iso_filename }}"
+    fstype: auto # usually iso9660 but win use udf so: auto
+    opts: ro
+    state: mounted
+
+# - name: Copy boot files
+#   ansible.posix.synchronize:
+#     src: files/
+#     dest: "{{ os_basedir_win11 }}/"
+
+- name: Copy autoinstall files
+  ansible.builtin.copy:
+    src: files/
+    dest: "{{ os_basedir_win11 }}/"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Deploy install.bat template
+  ansible.builtin.template:
+    src: templates/install.bat.j2
+    dest: "{{ os_basedir_win11 }}/install.bat"
+    mode: '0644'
+
+- name: Ensure win11.ipxe is not present anymore
+  ansible.builtin.file:
+    path: "{{ os_basedir_win11 }}/win11.ipxe"
+    state: absent

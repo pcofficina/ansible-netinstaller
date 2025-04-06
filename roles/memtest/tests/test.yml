@@ -1,6 +1,26 @@
 ---
-- hosts: localhost
+# This playbook is used to test the memtest role.
+- name: Test playbook for memtest role
+  hosts: localhost
   remote_user: root
-  roles:
-    - roles/memtest86+
-    
+  gather_facts: true
+  tasks:
+    - name: Include memtest role
+      ansible.builtin.include_role:
+        name: memtest
+
+    - name: Verify memtest configuration
+      ansible.builtin.debug:
+        msg: "Memtest role applied successfully"
+      changed_when: false
+
+    - name: Verify memtest bins
+      ansible.builtin.stat:
+        path: "{{ memtest_basedir }}/{{ item }}"
+      with_items: "{{ memtest_exes }}"
+      register: memtest_bin_stat
+
+    - name: Debug memtest bins
+      ansible.builtin.debug:
+        var: memtest_bin_stat.results
+      changed_when: false

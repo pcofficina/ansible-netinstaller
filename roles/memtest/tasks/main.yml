@@ -1,6 +1,6 @@
 ---
-# tasks file for roles/memtest86+
-- name: Ensure memtest86+ root directory exists [{{ memtest_basedir }}]
+# tasks file for roles/memtest
+- name: Ensure memtest root directory exists [{{ memtest_basedir }}]
   ansible.builtin.file:
     path: "{{ memtest_basedir }}"
     state: directory

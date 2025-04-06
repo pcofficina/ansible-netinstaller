@@ -8,9 +8,9 @@ name: "netinstaller"
 version: 1.0.0
 readme: README.md
 authors:
-  - your name <example@domain.com>
+  - Andrea Perotti <aperotti@pcofficina.org>
 
-description: your collection description
+description: Collection to configure a PXE netinstall server for Linux Mint and Windows
 license_file: LICENSE
 
 # TO-DO: update the tags based on your content type
@@ -20,7 +20,7 @@ tags: ["linux", "tools"]
 dependencies:
   "ansible.utils": "*" # note: "*" selects the latest version available
 
-repository: http://example.com/repository
+repository: https://github.com/pcofficina/ansible-netinstaller
 documentation: http://docs.example.com
 homepage: http://example.com
 issues: http://example.com/issue/tracker

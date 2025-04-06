@@ -167,5 +167,5 @@ cython_debug/
 .ansible/
 
 # Custom
-roles/iso-*/files/*.iso
+roles/iso*/files/*.iso
 .vscode/

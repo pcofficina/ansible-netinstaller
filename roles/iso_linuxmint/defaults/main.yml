@@ -1,4 +1,5 @@
 ---
 # defaults file for role/iso-linuxmint
-os_basedir_linuxmint: /{{ linuxmint_dir }}
-iso_filename: linuxmint-22.1.0-PCO-2025.03.17-xfce-64bit.iso
+iso_linuxmint_dir: mint
+iso_linuxmint_basepath_dir: "{{ basepath_dir }}/{{ iso_linuxmint_dir }}"
+iso_linuxmint_filename: linuxmint-22.1.0-PCO-2025.03.17-xfce-64bit.iso

@@ -1,0 +1,10 @@
+---
+# tasks file for role/nfs
+# - name: Include NFS role
+#   # Include the geerlingguy.nfs role to set up NFS server
+#   # and export the ISO directory.
+#   ansible.builtin.include_role:
+#     name: geerlingguy.nfs
+#   vars:
+#     nfs_exports:
+#       - "{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"

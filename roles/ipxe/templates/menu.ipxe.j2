@@ -66,36 +66,36 @@ goto start
 ############ OSes ############
 
 :mint-live
-initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
-boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive --
+initrd http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ network_lan_ip }}:{{ iso_linuxmint_basepath_dir }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive --
 boot || goto failed
 goto start
 
 :mint-live-compat
-initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
-boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive noapic noacpi irqpoll nomodeset --
+initrd http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz boot=casper netboot=nfs ip=dhcp nfsroot={{ network_lan_ip }}:{{ iso_linuxmint_basepath_dir }}/iso fsck.mode=skip nosplash username=pco hostname=pcolive noapic noacpi irqpoll nomodeset --
 boot || goto failed
 goto start
 
 :mint-install
-initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
-boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ lan_ip }}/{{ linuxmint_dir }}/production-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash automatic-ubiquity --
+initrd http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/production-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ network_lan_ip }}:{{ iso_linuxmint_basepath_dir }}/iso fsck.mode=skip nosplash automatic-ubiquity --
 boot || goto failed
 goto start
 
 :mint-install-oem
-initrd http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/initrd.gz
-boot http://{{ lan_ip }}/{{ linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ lan_ip }}/{{ linuxmint_dir }}/oem-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ lan_ip }}:{{ os_basedir_linuxmint }}/iso fsck.mode=skip nosplash automatic-ubiquity --
+initrd http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/initrd.gz
+boot http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/iso/casper/vmlinuz initrd=initrd.gz url=http://{{ network_lan_ip }}/{{ iso_linuxmint_dir }}/oem-ubiquity.seed boot=casper netboot=nfs ip=dhcp nfsroot={{ network_lan_ip }}:{{ iso_linuxmint_basepath_dir }}/iso fsck.mode=skip nosplash automatic-ubiquity --
 boot || goto failed
 goto start
 
 :win-install
-kernel http://{{ lan_ip }}/{{ win10_dir }}/wimboot
-initrd http://{{ lan_ip }}/{{ win10_dir }}/install.bat          install.bat
-initrd http://{{ lan_ip }}/{{ win10_dir }}/winpeshl.ini         winpeshl.ini
-initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/bcd         BCD
-initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/boot/boot.sdi    boot.sdi
-initrd http://{{ lan_ip }}/{{ win10_dir }}/iso/sources/boot.wim boot.wim
+kernel http://{{ network_lan_ip }}/{{ iso_win11_dir }}/wimboot
+initrd http://{{ network_lan_ip }}/{{ iso_win11_dir }}/install.bat          install.bat
+initrd http://{{ network_lan_ip }}/{{ iso_win11_dir }}/winpeshl.ini         winpeshl.ini
+initrd http://{{ network_lan_ip }}/{{ iso_win11_dir }}/iso/boot/bcd         BCD
+initrd http://{{ network_lan_ip }}/{{ iso_win11_dir }}/iso/boot/boot.sdi    boot.sdi
+initrd http://{{ network_lan_ip }}/{{ iso_win11_dir }}/iso/sources/boot.wim boot.wim
 boot || goto failed
 goto start
 
@@ -106,9 +106,9 @@ goto start
 iseq ${platform} efi && goto memtest_efi || goto memtest_bios
 
 :memtest_efi
-chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.efi - || goto failed
+chain http://{{ network_lan_ip }}/{{ memtest_dir }}/memtest64.efi - || goto failed
 goto start
 
 :memtest_bios
-chain http://{{ lan_ip }}/{{ memtest_dir }}/memtest64.bin - || goto failed
+chain http://{{ network_lan_ip }}/{{ memtest_dir }}/memtest64.bin - || goto failed
 goto start

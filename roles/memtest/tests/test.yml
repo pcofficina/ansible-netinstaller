@@ -16,8 +16,8 @@
 
     - name: Verify memtest bins
       ansible.builtin.stat:
-        path: "{{ memtest_basedir }}/{{ item }}"
-      with_items: "{{ memtest_exes }}"
+      path: "{{ memtest_basedir }}/{{ item }}"
+      loop: "{{ memtest_exes }}"
       register: memtest_bin_stat
 
     - name: Debug memtest bins

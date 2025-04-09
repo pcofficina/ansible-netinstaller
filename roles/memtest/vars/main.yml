@@ -1,6 +1,5 @@
 ---
 # vars file for roles/memtest86+
-memtest_dir: memtest
 memtest_baseurl: https://www.memtest.org/download/v7.20/
 memtest_archive_name: mt86plus_7.20.binaries.zip
 memtest_archive_url: "{{ memtest_baseurl }}/{{ memtest_archive_name }}"

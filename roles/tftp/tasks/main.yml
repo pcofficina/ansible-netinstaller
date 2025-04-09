@@ -45,6 +45,14 @@
     state: absent
   when: srv_tftp_status.stat.isdir is true
 
+- name: Ensure ipxe directory exists [{{ ipxe_basedir }}]
+  ansible.builtin.file:
+    path: "{{ ipxe_basedir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
 - name: Ensure symbolic link exist from /srv/tftp to {{ ipxe_basedir }}
   ansible.builtin.file:
     src: "{{ ipxe_basedir }}"

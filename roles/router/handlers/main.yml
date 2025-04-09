@@ -3,8 +3,8 @@
 - name: Reload sysctl
   ansible.builtin.command:
     cmd: sysctl -p
-  register: sysctl_output # <- Registers the command output.
-  changed_when: sysctl_output.rc != 0 # <- Uses the return code to define when the task has changed.
+  register: router_sysctl_output # <- Registers the command output.
+  changed_when: router_sysctl_output.rc != 0 # <- Uses the return code to define when the task has changed.
 
 - name: Reload nftables
   ansible.builtin.service:

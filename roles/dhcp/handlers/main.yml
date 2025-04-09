@@ -7,6 +7,6 @@
 
 - name: Reload AppArmor
   ansible.builtin.command:
-    cmd: apparmor_parser -r -v "{{ apparmor_conf }}"
+    cmd: apparmor_parser -r -v "{{ dhcp_apparmor_conf }}"
   register: my_output # <- Registers the command output.
   changed_when: my_output.rc != 0 # <- Uses the return code to define when the task has changed.

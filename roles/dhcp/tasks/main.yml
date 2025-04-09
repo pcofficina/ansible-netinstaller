@@ -9,7 +9,7 @@
 
 - name: Check if AppArmor specific file exist
   ansible.builtin.stat:
-    path: "{{ apparmor_conf }}"
+    path: "{{ dhcp_apparmor_conf }}"
   register: apparmor_state
 
 # - name: Ensure hook is present in {{ apparmor_conf }}
@@ -22,12 +22,13 @@
 
 - name: Ensure kea can read temp conf file from ansible temp dir
   ansible.builtin.blockinfile:
-    path: "{{ apparmor_conf }}"
+    path: "{{ dhcp_apparmor_conf }}"
     block: |
       /root/.ansible/tmp/ r,
-      /root/.ansible/tmp/** r,
+      /root/.ansible/tmp/** rw,
     marker: "### {mark} ANSIBLE MANAGED BLOCK"
     insertbefore: '}'
+    mode: '0644'
   when: apparmor_state.stat.exists
   notify: Reload AppArmor
 

@@ -1,16 +1,16 @@
 ---
 # tasks file for role/iso-windows
-- name: Ensure Windows 10 root directory exists [{{ os_basedir_win10 }}]
+- name: Ensure Windows 10 root directory exists [{{ basepath_dir_win10 }}]
   ansible.builtin.file:
-    path: "{{ os_basedir_win10 }}"
+    path: "{{ basepath_dir_win10 }}"
     state: directory
     mode: '0755'
     owner: root
     group: root
 
-- name: Get status of ISO {{ iso_filename }}
+- name: Get status of ISO {{ iso_win10_filename }}
   ansible.builtin.stat:
-    path: "{{ os_basedir_win10 }}/{{ iso_filename }}"
+    path: "{{ basepath_dir_win10 }}/{{ iso_win10_filename }}"
     get_attributes: false
     get_checksum: false
     get_mime: false
@@ -28,16 +28,16 @@
   register: smbd_stop_result
   when: iso_file_status.stat.exists
 
-- name: Umount ISO {{ iso_filename }}
+- name: Umount ISO {{ iso_win10_filename }}
   ansible.posix.mount:
-    path: "{{ os_basedir_win10 }}/iso"
+    path: "{{ basepath_dir_win10 }}/iso"
     state: unmounted
   when: iso_file_status.stat.exists and smbd_stop_result.state == "stopped"
 
-- name: Mount ISO {{ iso_filename }}
+- name: Mount ISO {{ iso_win10_filename }}
   ansible.posix.mount:
-    path: "{{ os_basedir_win10 }}/iso"
-    src: "{{ os_basedir_win10 }}/{{ iso_filename }}"
+    path: "{{ basepath_dir_win10 }}/iso"
+    src: "{{ basepath_dir_win10 }}/{{ iso_win10_filename }}"
     fstype: auto # usually iso9660 but win use udf so: auto
     opts: ro
     state: mounted
@@ -45,12 +45,12 @@
 # - name: Copy boot files
 #   ansible.posix.synchronize:
 #     src: files/
-#     dest: "{{ os_basedir_win10 }}/"
+#     dest: "{{ basepath_dir_win10 }}/"
 
 - name: Copy autoinstall files
   ansible.builtin.copy:
     src: files/
-    dest: "{{ os_basedir_win10 }}/"
+    dest: "{{ basepath_dir_win10 }}/"
     owner: root
     group: root
     mode: '0644'
@@ -58,10 +58,10 @@
 - name: Deploy install.bat template
   ansible.builtin.template:
     src: templates/install.bat.j2
-    dest: "{{ os_basedir_win10 }}/install.bat"
+    dest: "{{ basepath_dir_win10 }}/install.bat"
     mode: '0644'
 
 - name: Ensure win10.ipxe is not present anymore
   ansible.builtin.file:
-    path: "{{ os_basedir_win10 }}/win10.ipxe"
+    path: "{{ basepath_dir_win10 }}/win10.ipxe"
     state: absent

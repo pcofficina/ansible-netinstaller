@@ -1,4 +1,4 @@
 ---
 # defaults file for role/iso-windows
-os_basedir_win10: /{{ win10_dir }}
-iso_filename: Win10_22H2_Italian_x64v1_PCO_20240428.iso
+iso_win10_basepath_dir: "{{ basepath_dir }}/{{ iso_win10_dir }}"
+iso_win10_filename: Win10_22H2_Italian_x64v1_PCO_20240428.iso

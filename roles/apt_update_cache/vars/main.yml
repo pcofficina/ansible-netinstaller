@@ -1,4 +1,4 @@
 ---
 # vars file for role/apt-update-cache
 # 1 day cache
-apt_cache_valid_time: 86400
+apt_update_cache_valid_time: 86400

@@ -1,4 +1,4 @@
 ---
 # defaults file for role/iso-windows
-os_basedir_win11: /{{ win11_dir }}
-iso_filename: Win11_24H2_Italian_x64_pco_20250303.iso
+iso_win11_basepath_dir: "{{ basepath_dir }}/{{ iso_win11_dir }}"
+iso_win11_filename: Win11_24H2_Italian_x64_pco_20250303.iso

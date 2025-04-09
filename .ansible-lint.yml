@@ -1,0 +1,4 @@
+# List of rule IDs to be skipped entirely
+skip_list:
+  - package-latest  # Ignore warnings about using state=latest for package managers
+  # - another-rule-id # You can add other rules here too

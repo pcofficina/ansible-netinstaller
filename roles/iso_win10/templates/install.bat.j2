@@ -12,8 +12,8 @@ for /f "tokens=2* delims=	 " %%A in ('reg query HKLM\System\CurrentControlSet\Co
 pause
 
 ipconfig
-net view \\{{ lan_ip }}
-net use S: \\{{ lan_ip }}\win10
+net view \\{{ network_lan_ip }}
+net use S: \\{{ network_lan_ip }}\win10
 
 if %Firmware% == 0x2 (
   (echo Rescan

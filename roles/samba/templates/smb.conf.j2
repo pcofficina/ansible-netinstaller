@@ -1,6 +1,6 @@
 [global]
         bind interfaces only = yes
-        interfaces = {{ lan_ip }}
+        interfaces = {{ network_lan_ip }}
 
         workgroup = PCO
         security = user
@@ -14,7 +14,7 @@
         acl allow execute always = True
 
 [win11]
-        path = {{ os_basedir }}/win11/
+        path = {{ basepath_dir }}/win11/
         browseable = yes
         read only = yes
         guest only = yes

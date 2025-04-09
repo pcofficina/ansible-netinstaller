@@ -1,3 +1,3 @@
 ---
 # vars file for role/iso-windows
-win11_dir: win11
+iso_win11_dir: win11

@@ -1,20 +1,13 @@
 galaxy_info:
-  author: foo
+  author: Andrea Perotti <aperotti@pcofficina.org>
   description: Pcofficina.Netinstaller Run Role
-  company: Pcofficina
+  company: Associazione PCOfficina
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
   # issue_tracker_url: http://example.com/issue/tracker
 
-  # Choose a valid license ID from https://spdx.org - some suggested licenses:
-  # - BSD-3-Clause (default)
-  # - MIT
-  # - GPL-2.0-or-later
-  # - GPL-3.0-only
-  # - Apache-2.0
-  # - CC-BY-4.0
-  license: GPL-2.0-or-later
+  license: GPL-3.0-only
 
   min_ansible_version: "2.14"
 
@@ -49,6 +42,17 @@ galaxy_info:
     #       Maximum 20 tags per role.
 
 dependencies:
-  []
-  # List your role dependencies here, one per line. Be sure to remove the '[]' above,
-  # if you add dependencies to this list.
+  - role: pcofficina.netinstaller.debian_only
+  - role: pcofficina.netinstaller.apt_update_cache
+  - role: pcofficina.netinstaller.basepath
+  - role: pcofficina.netinstaller.network
+  - role: pcofficina.netinstaller.dhcp
+  - role: pcofficina.netinstaller.router
+  - role: pcofficina.netinstaller.memtest
+  - role: pcofficina.netinstaller.iso_linuxmint
+  - role: pcofficina.netinstaller.iso_win11
+  - role: pcofficina.netinstaller.ipxe
+  - role: pcofficina.netinstaller.tftp
+  - role: pcofficina.netinstaller.nfs
+  - role: pcofficina.netinstaller.samba
+  - role: pcofficina.netinstaller.http

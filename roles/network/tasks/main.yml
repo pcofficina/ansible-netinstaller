@@ -18,18 +18,18 @@
     enabled: true
     state: started
 
-- name: Add an Ethernet connection with static IP configuration for  "{{ lan_interface }}"
+- name: Add an Ethernet connection with static IP configuration for  "{{ network_lan_interface }}"
   community.general.nmcli:
-    conn_name: "{{ lan_interface }}"
-    ifname: "{{ lan_interface }}"
+    conn_name: "{{ network_lan_interface }}"
+    ifname: "{{ network_lan_interface }}"
     type: ethernet
-    ip4: "{{ lan_ip }}/{{ lan_netmask }}"
+    ip4: "{{ network_lan_ip }}/{{ network_lan_netmask }}"
     # gw4: "" # this interface IS the GW
     never_default4: true
     state: present
 
-- name: Enable connection for  "{{ lan_interface }}"
+- name: Enable connection for  "{{ network_lan_interface }}"
   ansible.builtin.command:
-    cmd: nmcli connection up "{{ lan_interface }}"
-  register: my_output # <- Registers the command output.
-  changed_when: my_output.rc != 0 # <- Uses the return code to define when the task has changed.
+    cmd: nmcli connection up "{{ network_lan_interface }}"
+  register: network_nmcli_output # <- Registers the command output.
+  changed_when: network_nmcli_output.rc != 0 # <- Uses the return code to define when the task has changed.

@@ -1,0 +1,10 @@
+---
+# defaults file for common_vars
+basepath_dir: "/install"
+iso_linuxmint_dir: "mint"
+iso_win11_dir: "win11"
+ipxe_dir: "ipxe"
+memtest_dir: "memtest"
+iso_linuxmint_basepath_dir: "{{ basepath_dir }}/{{ iso_linuxmint_dir }}"
+# used in nfs role
+nfs_exports: ["{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"]

@@ -1,4 +1,4 @@
 ---
 # defaults file for role/nftables
-wan_net: 192.168.100.0
-wan_netmask: 24
+router_wan_net: 192.168.100.0
+router_wan_netmask: 24

@@ -1,3 +1,4 @@
 ---
 # defaults file for roles/memtest86+
-memtest_basedir: /{{ memtest_dir }}
+memtest_dir: memtest
+memtest_basedir: "{{ basepath_dir }}/{{ memtest_dir }}"

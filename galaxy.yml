@@ -14,11 +14,13 @@ description: Collection to configure a PXE netinstall server for Linux Mint and 
 license_file: LICENSE
 
 # TO-DO: update the tags based on your content type
-tags: ["linux", "tools"]
+tags: ["linux", "tools", "nfs", "pxe", "nginx", "samba"]
 
 # TO-DO: maintain this list to reflect the collection's dependencies
 dependencies:
   "ansible.utils": "*" # note: "*" selects the latest version available
+  "ansible.posix": "*"
+  "community.general": "*"
 
 repository: https://github.com/pcofficina/ansible-netinstaller
 documentation: http://docs.example.com

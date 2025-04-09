@@ -1,17 +1,25 @@
 ---
 # tasks file for role/iso-linuxmint
 
-- name: Ensure LinuxMint root directory exists [{{ os_basedir_linuxmint }}]
+- name: Ensure LinuxMint root directory exists [{{ iso_linuxmint_basepath_dir }}]
   ansible.builtin.file:
-    path: "{{ os_basedir_linuxmint }}"
+    path: "{{ iso_linuxmint_basepath_dir }}"
     state: directory
     mode: '0755'
     owner: root
     group: root
 
-- name: Get status of ISO {{ iso_filename }}
+# - name: Ensure LinuxMint ISO mount point exists [{{ iso_linuxmint_basepath_dir }}/iso]
+#   ansible.builtin.file:
+#     path: "{{ iso_linuxmint_basepath_dir }}/iso"
+#     state: directory
+#     mode: '0755'
+#     owner: root
+#     group: root
+
+- name: Get status of ISO {{ iso_linuxmint_filename }}
   ansible.builtin.stat:
-    path: "{{ os_basedir_linuxmint }}/{{ iso_filename }}"
+    path: "{{ iso_linuxmint_basepath_dir }}/{{ iso_linuxmint_filename }}"
     get_attributes: false
     get_checksum: false
     get_mime: false
@@ -29,29 +37,29 @@
   register: nfs_stop_result
   when: iso_file_status.stat.exists
 
-- name: Umount ISO {{ iso_filename }}
+- name: Umount ISO {{ iso_linuxmint_filename }}
   ansible.posix.mount:
-    path: "{{ os_basedir_linuxmint }}/iso"
+    path: "{{ iso_linuxmint_basepath_dir }}/iso"
     state: unmounted
   when: iso_file_status.stat.exists and nfs_stop_result.state == "stopped"
 
 - name: Copy preseed files
   ansible.builtin.copy:
     src: files/
-    dest: "{{ os_basedir_linuxmint }}/"
+    dest: "{{ iso_linuxmint_basepath_dir }}/"
     owner: root
     group: root
     mode: '0644'
 
-- name: Mount ISO {{ iso_filename }}
+- name: Mount ISO {{ iso_linuxmint_filename }}
   ansible.posix.mount:
-    path: "{{ os_basedir_linuxmint }}/iso"
-    src: "{{ os_basedir_linuxmint }}/{{ iso_filename }}"
+    path: "{{ iso_linuxmint_basepath_dir }}/iso"
+    src: "{{ iso_linuxmint_basepath_dir }}/{{ iso_linuxmint_filename }}"
     fstype: auto # usually iso9660 but win use udf so: auto
     opts: ro
     state: mounted
 
 - name: Ensure mint.ipxe is not present anymore
   ansible.builtin.file:
-    path: "{{ os_basedir_linuxmint }}/mint.ipxe"
+    path: "{{ iso_linuxmint_basepath_dir }}/mint.ipxe"
     state: absent

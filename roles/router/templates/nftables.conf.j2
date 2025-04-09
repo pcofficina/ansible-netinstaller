@@ -22,6 +22,6 @@ table inet nat {
 
 	chain postrouting {
 		type nat hook postrouting priority srcnat; policy accept;
-		ip saddr {{lan_net}}/{{lan_netmask}} masquerade
+		ip saddr {{network_lan_net}}/{{network_lan_netmask}} masquerade
 	}
 }

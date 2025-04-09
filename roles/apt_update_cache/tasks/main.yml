@@ -4,4 +4,4 @@
   register: updatesys
   ansible.builtin.apt:
     update_cache: true
-    cache_valid_time: "{{ apt_cache_valid_time }}"
+    cache_valid_time: "{{ apt_update_cache_valid_time }}"

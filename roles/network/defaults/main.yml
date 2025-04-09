@@ -1,5 +1,5 @@
 ---
 # defaults file for role/network
-lan_interface="eth0"
-lan_ip="192.168.192.1"
-lan_netmask="24"
+network_lan_interface: eth0
+network_lan_ip: 192.168.192.1
+network_lan_netmask: 24

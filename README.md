@@ -1,4 +1,4 @@
-# Pcofficina Netinstaller Collection
+# PCOfficina Netinstaller Collection
 
 This repository contains the `pcofficina.netinstaller` Ansible Collection.
 

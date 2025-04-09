@@ -39,4 +39,4 @@
   ansible.builtin.service:
     name: nginx
     enabled: true
-    state: active
+    state: started

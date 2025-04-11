@@ -34,3 +34,4 @@ galaxy_info:
 
 dependencies:
   - role: pcofficina.netinstaller.common_vars
+    

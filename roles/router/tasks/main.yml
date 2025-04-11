@@ -8,6 +8,17 @@
     mode: '0644'
   notify: Reload sysctl
 
+- name: Install nftables
+  ansible.builtin.apt:
+    name: nftables
+    state: latest
+
+- name: Ensure nftables is enabled and running
+  ansible.builtin.service:
+    name: nginx
+    enabled: true
+    state: started
+
 - name: Deploy nftables ruleset
   ansible.builtin.template:
     src: templates/nftables.conf.j2

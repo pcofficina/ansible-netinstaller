@@ -1,10 +1,16 @@
 ---
-# tasks file for role/nfs
-# - name: Include NFS role
-#   # Include the geerlingguy.nfs role to set up NFS server
-#   # and export the ISO directory.
-#   ansible.builtin.include_role:
-#     name: geerlingguy.nfs
-#   vars:
-#     nfs_exports:
-#       - "{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"
+# tasks file for netinstaller.nfs
+
+# The geerlingguy.nfs role handles:
+# - Installation of NFS server packages
+# - Configuration of /etc/exports based on nfs_exports variable
+# - Ensuring the NFS service is running and enabled
+# collections/ansible_collections/my_org/pxe_server/roles/base_config/tasks/main.yml
+- name: Determine Linux Mint base path to be shared via NFS
+  ansible.builtin.set_fact:
+    nfs_exports:
+      - "{{ nfs_mint_export }}"
+
+- name: Ensure NFS server is installed
+  ansible.builtin.import_role:
+    name: geerlingguy.nfs

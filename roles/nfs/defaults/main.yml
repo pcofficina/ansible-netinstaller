@@ -1,4 +1,2 @@
 ---
 # defaults file for nfs
-nfs_exports:
-      - "{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"

@@ -7,4 +7,4 @@ ipxe_dir: "ipxe"
 memtest_dir: "memtest"
 iso_linuxmint_basepath_dir: "{{ basepath_dir }}/{{ iso_linuxmint_dir }}"
 # used in nfs role
-nfs_exports: ["{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"]
+nfs_mint_export: "{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)"

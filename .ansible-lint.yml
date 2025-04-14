@@ -15,11 +15,11 @@ exclude_paths:
 
 # Disable specific rules
 skip_list:
-  - meta-no-tags  # Allow roles without tags
-  - name[template]  # Allow complex templating in task names
-  - package-latest  # Ignore warnings about using state=latest for package managers
+  - meta-no-tags # Allow roles without tags
+  - name[template] # Allow complex templating in task names
+  - package-latest # Ignore warnings about using state=latest for package managers
 
 # Set warning level for specified rules
 warn_list:
-  - fqcn[action-core]  # Warn about non-FQCN module names
-  - experimental  # Enable experimental rules
+  - fqcn[action-core] # Warn about non-FQCN module names
+  - experimental # Enable experimental rules

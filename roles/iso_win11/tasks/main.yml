@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: "{{ iso_win11_basepath_dir }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: root
     group: root
 
@@ -53,13 +53,13 @@
     dest: "{{ iso_win11_basepath_dir }}/"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Deploy install.bat template
   ansible.builtin.template:
     src: templates/install.bat.j2
     dest: "{{ iso_win11_basepath_dir }}/install.bat"
-    mode: '0644'
+    mode: "0644"
 
 - name: Ensure win11.ipxe is not present anymore
   ansible.builtin.file:

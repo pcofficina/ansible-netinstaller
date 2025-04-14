@@ -1,10 +1,10 @@
 ---
 # defaults file for common_vars
-basepath_dir: "/install"  # noqa: var-naming[no-role-prefix]
+basepath_dir: "/install" # noqa: var-naming[no-role-prefix]
 iso_linuxmint_dir: "mint" # noqa: var-naming[no-role-prefix]
-iso_win11_dir: "win11"    # noqa: var-naming[no-role-prefix]
-ipxe_dir: "ipxe"          # noqa: var-naming[no-role-prefix]
-memtest_dir: "memtest"    # noqa: var-naming[no-role-prefix]
-iso_linuxmint_basepath_dir: "{{ basepath_dir }}/{{ iso_linuxmint_dir }}"          # noqa: var-naming[no-role-prefix]
+iso_win11_dir: "win11" # noqa: var-naming[no-role-prefix]
+ipxe_dir: "ipxe" # noqa: var-naming[no-role-prefix]
+memtest_dir: "memtest" # noqa: var-naming[no-role-prefix]
+iso_linuxmint_basepath_dir: "{{ basepath_dir }}/{{ iso_linuxmint_dir }}" # noqa: var-naming[no-role-prefix]
 # used in nfs role
 nfs_mint_export: "{{ iso_linuxmint_basepath_dir }}/iso *(rw,sync,no_root_squash)" # noqa: var-naming[no-role-prefix]

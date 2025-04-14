@@ -5,7 +5,7 @@ This repository contains the `pcofficina.netinstaller` Ansible Collection, desig
 - Network based installation of latest Linux Mint and Windows 11 OSes
 - Network boot of latest Memtest86+ memory testing tools
 
-The collection is designed to be executed on Debin/Ubuntu distros or derived, and has an opinionated approach: while most of the behaviours can be adapted adjusting the variables of the various roles, it is designed with reasonable defaults to produce a ready made configuration, 
+The collection is designed to be executed on Debin/Ubuntu distros or derived, and has an opinionated approach: while most of the behaviours can be adapted adjusting the variables of the various roles, it is designed with reasonable defaults to produce a ready made configuration,
 
 
 

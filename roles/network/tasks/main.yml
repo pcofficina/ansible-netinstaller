@@ -10,7 +10,7 @@
   ansible.builtin.copy:
     src: files/interfaces
     dest: /etc/network/interfaces
-    mode: '0644'
+    mode: "0644"
 
 - name: Ensure NetworkManager is running
   ansible.builtin.service:

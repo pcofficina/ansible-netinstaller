@@ -11,7 +11,7 @@
     dest: /etc/samba/smb.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
     validate: /usr/bin/testparm -s %s
     backup: true
   notify: Restart samba
@@ -27,7 +27,6 @@
     name: nmbd
     enabled: false
     state: stopped
-
 # - name: Ensure winbind server is inactive and disabled
 #  ansible.builtin.service:
 #    name: winbind

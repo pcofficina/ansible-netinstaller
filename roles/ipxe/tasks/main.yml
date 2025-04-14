@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: "{{ ipxe_basedir }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: root
     group: root
 
@@ -17,7 +17,7 @@
   ansible.builtin.template:
     src: templates/ipxe-updater.sh.j2
     dest: "{{ ipxe_basedir }}/ipxe-updater.sh"
-    mode: '0744'
+    mode: "0744"
   notify: Run IPXE updater
 
 - name: Get IPXE files status
@@ -49,4 +49,4 @@
   ansible.builtin.template:
     src: templates/menu.ipxe.j2
     dest: "{{ ipxe_basedir }}/menu.ipxe"
-    mode: '0644'
+    mode: "0644"

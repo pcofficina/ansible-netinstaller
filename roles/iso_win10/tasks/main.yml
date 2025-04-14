@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: "{{ basepath_dir_win10 }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: root
     group: root
 
@@ -53,13 +53,13 @@
     dest: "{{ basepath_dir_win10 }}/"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: Deploy install.bat template
   ansible.builtin.template:
     src: templates/install.bat.j2
     dest: "{{ basepath_dir_win10 }}/install.bat"
-    mode: '0644'
+    mode: "0644"
 
 - name: Ensure win10.ipxe is not present anymore
   ansible.builtin.file:

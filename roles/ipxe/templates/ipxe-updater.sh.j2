@@ -16,4 +16,3 @@ fi
 for IPXE_FILE in $IPXE_FILE_LIST; do
         curl $IPXE_URL/$IPXE_FILE  -o $IPXE_FILE.$TODAY && rm -f $IPXE_FILE && ln $IPXE_FILE.$TODAY $IPXE_FILE
 done
-

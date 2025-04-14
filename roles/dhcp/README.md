@@ -1,38 +1,59 @@
-Role Name
-=========
+# Pcofficina.Netinstaller DHCP Role
 
-A brief description of the role goes here.
+This role configures a DHCP server for the installation network, providing IP addresses and PXE boot information to client machines.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `dhcp` role:
+1. Installs and configures a Kea DHCP server
+2. Sets up the DHCP subnet with appropriate address range
+3. Configures PXE boot options needed for network installation
+4. Ensures the DHCP service is running and enabled
+5. Configures firewall rules if applicable
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- No special requirements beyond the collection-level requirements
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_interface` | Interface for DHCP server | String | Yes | None |
+| `network_lan_ip` | IP address of this server (used as next-server) | String | Yes | None |
+| `network_lan_net` | Network address for the installation LAN | String | Yes | None |
+| `network_lan_netmask` | Netmask for the installation network | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `dhcp_lan_ip_pool_start` | First IP in DHCP range | String | No | Automatically calculated |
+| `dhcp_lan_ip_pool_end` | Last IP in DHCP range | String | No | Automatically calculated |
 
-License
--------
+The DHCP pool range is automatically calculated to reserve approximately 80% of the IP addresses in the subnet. The reserved IPs are split between the beginning and end of the subnet range.
 
-BSD
+## Dependencies
 
-Author Information
-------------------
+- `pcofficina.netinstaller.common_vars`
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+## Example Usage
+
+```yaml
+- name: Set up DHCP server
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.dhcp
+  vars:
+    network_lan_interface: "enp3s0"
+    network_lan_ip: "192.168.192.1"
+    network_lan_net: "192.168.192.0"
+    network_lan_netmask: "24"
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

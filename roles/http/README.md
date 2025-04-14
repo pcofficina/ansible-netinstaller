@@ -1,38 +1,55 @@
-Role Name
-=========
+# Pcofficina.Netinstaller HTTP Role
 
-A brief description of the role goes here.
+This role configures an HTTP server to host boot files, scripts, and resources needed for network-based installations.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `http` role:
+1. Installs an HTTP server (Nginx)
+2. Creates the necessary directory structure
+3. Configures the server to serve files from the designated directory
+4. Sets appropriate permissions and ownership
+5. Ensures the HTTP server is running and enabled
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- No special requirements beyond the collection-level requirements
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `netinstaller_http_dir` | HTTP server root directory | String | Yes | From common_vars |
+| `network_lan_interface` | Network interface for HTTP service | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `http_server` | HTTP server to use (apache or nginx) | String | No | "apache" |
+| `http_server_package` | HTTP server package to install | String | No | Determined by OS and http_server |
+| `http_manage_firewall` | Whether to configure firewall rules | Boolean | No | true |
+| `http_server_port` | Port for the HTTP server | Integer | No | 80 |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Set up HTTP server
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.http
+  vars:
+    http_server: "nginx"
+    http_server_port: 8080
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

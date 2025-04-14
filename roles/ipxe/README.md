@@ -1,38 +1,59 @@
-Role Name
-=========
+# Pcofficina.Netinstaller iPXE Role
 
-A brief description of the role goes here.
+This role sets up the iPXE boot environment which provides advanced network boot capabilities beyond standard PXE, including HTTP boot, menu systems, and scripting.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `ipxe` role:
+1. Installs iPXE packages or builds from source if necessary
+2. Creates iPXE boot menu configuration files
+3. Sets up iPXE chain loading from standard PXE
+4. Configures boot menu entries for available operating systems
+5. Places all necessary files in the TFTP and HTTP directories
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- TFTP server (configured by the tftp role)
+- HTTP server (configured by the http role)
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `netinstaller_tftp_dir` | TFTP root directory | String | Yes | From common_vars |
+| `netinstaller_http_dir` | HTTP server root directory | String | Yes | From common_vars |
+| `network_lan_ip` | IP address for the server on the installation network | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `ipxe_build_from_source` | Whether to build iPXE from source | Boolean | No | false |
+| `ipxe_source_repo` | Git repository for iPXE source | String | No | "https://github.com/ipxe/ipxe.git" |
+| `ipxe_menu_timeout` | Timeout for boot menu in seconds | Integer | No | 30 |
+| `ipxe_default_boot` | Default boot option if timeout expires | String | No | "local" |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
+- `pcofficina.netinstaller.tftp` (for serving boot files)
+- `pcofficina.netinstaller.http` (for serving iPXE scripts and files)
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Configure iPXE boot environment
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.ipxe
+  vars:
+    ipxe_menu_timeout: 60
+    ipxe_default_boot: "linux_mint"
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

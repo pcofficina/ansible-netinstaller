@@ -1,38 +1,59 @@
-Role Name
-=========
+# Pcofficina.Netinstaller ISO_win11 Role
 
-A brief description of the role goes here.
+This role prepares Windows 11 installation files for network-based deployment by extracting the ISO and configuring the necessary files for network booting via Samba.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `iso_win11` role:
+1. Processes a Windows 11 ISO (user-provided, as it cannot be automatically downloaded)
+2. Extracts the ISO contents to the Samba share directory
+3. Creates the necessary directory structure
+4. Configures boot files for PXE/iPXE booting
+5. Creates the appropriate boot menu entries
+6. Sets up Windows PE environment if configured
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- Windows 11 ISO file (must be provided by the user)
+- Sufficient disk space for Windows 11 ISO and extracted files
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `netinstaller_samba_dir` | Directory for Samba shares | String | Yes | From common_vars |
+| `win11_iso_path` | Path to Windows 11 ISO file | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `win11_editions` | List of Windows 11 editions to make available | List | No | ["Professional", "Home"] |
+| `win_pe_support` | Whether to set up Windows PE environment | Boolean | No | true |
+| `win_auto_install` | Whether to enable unattended installation | Boolean | No | false |
+| `win_auto_install_template` | Path to autounattend.xml template | String | No | None |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
+- `pcofficina.netinstaller.samba` (for sharing the installation files)
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Prepare Windows 11 installation files
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.iso_win11
+  vars:
+    win11_iso_path: "/path/to/windows11.iso"
+    win11_editions: ["Professional", "Education"]
+    win_auto_install: true
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

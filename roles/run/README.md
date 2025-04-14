@@ -1,57 +1,78 @@
-Pcofficina.Netinstaller Run Role
-========================
+# Pcofficina.Netinstaller Run Role
 
-A brief description of the role goes here.
+This is the main orchestration role for the PCOfficina Netinstaller collection. It configures a server to provide network installation services by applying all the necessary component roles in the correct sequence.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `run` role:
+1. Validates required variables
+2. Configures the specified network interface
+3. Applies all component roles to set up a complete network installation environment
+4. Ensures all services are properly configured and running
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- Root/sudo access on the target host
+- A dedicated network interface for the installation network
+- Sufficient disk space for OS installation files
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_interface` | Network interface to be used for installation LAN | String | Yes | None |
+| `network_lan_ip` | IP address for the server on the installation network | String | Yes | None |
+| `network_lan_net` | Network address for the installation LAN | String | Yes | None |
+| `network_lan_netmask` | Netmask for the installation network in CIDR notation | String | Yes | None |
+| `dhcp_lan_interface` | Interface for DHCP server (usually the same as network_lan_interface) | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
+
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `netinstaller_data_dir` | Directory to store installation files | String | No | "/opt/netinstaller" |
+| `dhcp_range_start` | First IP in DHCP range | String | No | Calculated from network settings |
+| `dhcp_range_end` | Last IP in DHCP range | String | No | Calculated from network settings |
+
+## Dependencies
+
+This role depends on the following roles, which it will call in sequence:
+  - `pcofficina.netinstaller.debian_only`
+  - `pcofficina.netinstaller.apt_update_cache`
+  - `pcofficina.netinstaller.basepath`
+  - `pcofficina.netinstaller.network`
+  - `pcofficina.netinstaller.dhcp`
+  - `pcofficina.netinstaller.router`
+  - `pcofficina.netinstaller.memtest`
+  - `pcofficina.netinstaller.iso_linuxmint`
+  - `pcofficina.netinstaller.iso_win11`
+  - `pcofficina.netinstaller.ipxe`
+  - `pcofficina.netinstaller.tftp`
+  - `pcofficina.netinstaller.nfs`
+  - `pcofficina.netinstaller.samba`
+  - `pcofficina.netinstaller.http`
+
+## Example Playbook
 
 ```yaml
-- name: Execute tasks on servers
-  hosts: servers
-  roles:
-    - role: pcofficina.netinstaller.run
-      run_x: 42
-```
-
-Another way to consume this role would be:
-
-```yaml
-- name: Initialize the run role from pcofficina.netinstaller
-  hosts: servers
-  gather_facts: false
+- name: NetInstaller Setup
+  hosts: netinstall_server
+  vars:
+    network_lan_interface: "enp3s0"
+    network_lan_ip: "192.168.192.1"
+    network_lan_net: "192.168.192.0"
+    network_lan_netmask: "24"
+    dhcp_lan_interface: "{{ network_lan_interface }}"
   tasks:
-    - name: Trigger invocation of run role
+    - name: Apply Netserver Collection
       ansible.builtin.include_role:
         name: pcofficina.netinstaller.run
-      vars:
-        run_x: 42
 ```
 
-License
--------
+## License
 
-# TO-DO: Update the license to the one you want to use (delete this line after setting the license)
-BSD
+GNU General Public License v3.0 or later.
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

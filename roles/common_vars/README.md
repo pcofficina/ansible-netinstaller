@@ -1,57 +1,59 @@
-Pcofficina.Netinstaller Run Role
-========================
+# Pcofficina.Netinstaller Common_vars Role
 
-A brief description of the role goes here.
+This role defines common variables and validates requirements across all roles in the PCOfficina Netinstaller collection.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `common_vars` role:
+1. Defines default values for shared variables
+2. Validates that required variables are set correctly
+3. Calculates derived values used by other roles
+4. Ensures consistent configuration across the collection
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+None beyond the collection-level requirements.
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables (defined at collection level)
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_interface` | Network interface to be used for installation LAN | String | Yes | None |
+| `network_lan_ip` | IP address for the server on the installation network | String | Yes | None |
+| `network_lan_net` | Network address for the installation LAN | String | Yes | None |
+| `network_lan_netmask` | Netmask for the installation network in CIDR notation | String | Yes | None |
+| `dhcp_lan_interface` | Interface for DHCP server | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Variables Defined by This Role
+
+| Variable | Description | Type | Calculated From |
+|----------|-------------|------|----------------|
+| `netinstaller_data_dir` | Directory to store installation files | String | Default: "/opt/netinstaller" |
+| `netinstaller_tftp_dir` | TFTP root directory | String | Default: "{{ netinstaller_data_dir }}/tftp" |
+| `netinstaller_http_dir` | HTTP server root directory | String | Default: "{{ netinstaller_data_dir }}/http" |
+| `netinstaller_nfs_dir` | NFS export directory | String | Default: "{{ netinstaller_data_dir }}/nfs" |
+| `netinstaller_samba_dir` | Samba share directory | String | Default: "{{ netinstaller_data_dir }}/samba" |
+| `dhcp_range_start` | First IP in DHCP range | String | Based on network_lan_net and netmask |
+| `dhcp_range_end` | Last IP in DHCP range | String | Based on network_lan_net and netmask |
+
+## Dependencies
+
+None.
+
+## Example Usage
+
+This role is not typically used directly but is instead called by the `run` role. However, if needed, it can be included separately:
 
 ```yaml
-- name: Execute tasks on servers
-  hosts: servers
-  roles:
-    - role: pcofficina.netinstaller.run
-      run_x: 42
+- name: Include common variables
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.common_vars
 ```
 
-Another way to consume this role would be:
+## License
 
-```yaml
-- name: Initialize the run role from pcofficina.netinstaller
-  hosts: servers
-  gather_facts: false
-  tasks:
-    - name: Trigger invocation of run role
-      ansible.builtin.include_role:
-        name: pcofficina.netinstaller.run
-      vars:
-        run_x: 42
-```
+GNU General Public License v3.0 or later.
 
-License
--------
-
-# TO-DO: Update the license to the one you want to use (delete this line after setting the license)
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

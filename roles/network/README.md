@@ -1,38 +1,59 @@
-Role Name
-=========
+# Pcofficina.Netinstaller Network Role
 
-A brief description of the role goes here.
+This role configures the network interfaces required for the netinstaller environment, setting up the dedicated installation network for PXE booting and network-based OS installations.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `network` role:
+1. Configures the specified network interface with a static IP address
+2. Ensures the interface is up and operational
+3. Sets up network parameters required by other roles
+4. Configures network settings persistently across reboots
+5. Validates network configuration
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- A dedicated network interface for the installation network
+- Root/sudo access on the target system
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_interface` | Network interface to be used for installation LAN | String | Yes | None |
+| `network_lan_ip` | IP address for the server on the installation network | String | Yes | None |
+| `network_lan_net` | Network address for the installation LAN | String | Yes | None |
+| `network_lan_netmask` | Netmask for the installation network in CIDR notation | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_gateway` | Gateway for the installation network (if any) | String | No | None |
+| `network_restart_method` | Method to use when restarting network (service, systemd, etc.) | String | No | Determined by OS |
+| `network_manage_routes` | Whether to manage network routes | Boolean | No | false |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Configure network for netinstaller
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.network
+  vars:
+    network_lan_interface: "enp3s0"
+    network_lan_ip: "192.168.192.1"
+    network_lan_net: "192.168.192.0"
+    network_lan_netmask: "24"
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

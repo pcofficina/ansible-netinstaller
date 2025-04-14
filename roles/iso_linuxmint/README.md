@@ -1,38 +1,56 @@
-Role Name
-=========
+# Pcofficina.Netinstaller ISO_linuxmint Role
 
-A brief description of the role goes here.
+This role prepares Linux Mint installation files for network-based deployment by extracting the ISO and configuring the necessary files for network booting.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `iso_linuxmint` role:
+1. Downloads Linux Mint ISO (if not already present)
+2. Extracts the ISO contents to the NFS export directory
+3. Creates the necessary directory structure
+4. Configures boot files for PXE/iPXE booting
+5. Sets up the appropriate boot menu entries
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- Sufficient disk space for Linux Mint ISO and extracted files
+- Internet access (if downloading the ISO)
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `netinstaller_nfs_dir` | Directory for NFS exports | String | Yes | From common_vars |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `linuxmint_iso_url` | URL to download Linux Mint ISO | String | No | Latest stable release URL |
+| `linuxmint_iso_path` | Local path to ISO if already downloaded | String | No | "{{ netinstaller_data_dir }}/iso/linuxmint.iso" |
+| `linuxmint_version` | Version of Linux Mint to install | String | No | "21.2" |
+| `linuxmint_edition` | Linux Mint edition (Cinnamon, MATE, Xfce) | String | No | "Cinnamon" |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
+- `pcofficina.netinstaller.nfs` (for sharing the installation files)
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Prepare Linux Mint installation files
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.iso_linuxmint
+  vars:
+    linuxmint_version: "21.2"
+    linuxmint_edition: "Cinnamon"
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

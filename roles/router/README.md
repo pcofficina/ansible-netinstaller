@@ -1,38 +1,59 @@
-Role Name
-=========
+# Pcofficina.Netinstaller Router Role
 
-A brief description of the role goes here.
+This role configures the netinstaller server to act as a router, allowing clients on the installation network to access external networks (like the internet) for package downloads during installation.
 
-Requirements
-------------
+## Role Purpose
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The `router` role:
+1. Enables IP forwarding on the system
+2. Configures NAT using iptables or nftables
+3. Sets up proper routing between network interfaces
+4. Ensures persistence of routing configuration
+5. Configures firewall rules as needed
 
-Role Variables
---------------
+## Requirements
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- At least two network interfaces (one for installation LAN, one for external connectivity)
+- Root/sudo access on the target system
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+### Required Variables
 
-Example Playbook
-----------------
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `network_lan_interface` | Network interface for the installation LAN | String | Yes | None |
+| `network_wan_interface` | Network interface for external connectivity | String | Yes | None |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+### Optional Variables
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+| Variable | Description | Type | Required | Default |
+|----------|-------------|------|----------|---------|
+| `router_enable_nat` | Whether to enable NAT for outgoing connections | Boolean | No | true |
+| `router_forward_ports` | List of ports to forward from WAN to LAN | List | No | [] |
+| `router_firewall_type` | Firewall type to use (iptables, nftables, firewalld) | String | No | Determined by OS |
+| `router_persistent_config` | Whether to make routing config persistent | Boolean | No | true |
 
-License
--------
+## Dependencies
 
-BSD
+- `pcofficina.netinstaller.common_vars`
+- `pcofficina.netinstaller.network` (for network interface configuration)
 
-Author Information
-------------------
+## Example Usage
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- name: Configure routing
+  ansible.builtin.include_role:
+    name: pcofficina.netinstaller.router
+  vars:
+    network_wan_interface: "enp1s0"
+    router_enable_nat: true
+    router_forward_ports:
+      - { proto: tcp, port: 22 }
+```
+
+## License
+
+GNU General Public License v3.0 or later.
+
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.

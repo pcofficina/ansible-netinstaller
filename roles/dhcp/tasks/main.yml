@@ -1,5 +1,32 @@
 ---
 # tasks file for role/dhcp
+- name: Calculate network information for DHCP pool
+  ansible.builtin.set_fact:
+    # Format the full CIDR network representation
+    network_cidr: "{{ dhcp_lan_net }} / {{ dhcp_lan_netmask }}"
+    # Get the first usable IP in the subnet
+    first_usable_ip: "{{ (dhcp_lan_net + '/' + dhcp_lan_netmask | string) | ansible.utils.ipaddr('first_usable') }}"
+    # Get the last usable IP in the subnet
+    last_usable_ip: "{{ (dhcp_lan_net + '/' + dhcp_lan_netmask | string) | ansible.utils.ipaddr('last_usable') }}"
+    # Calculate total usable IPs (network size minus network and broadcast)
+    usable_ip_count: "{{ ((dhcp_lan_net + '/' + dhcp_lan_netmask | string) | ansible.utils.ipaddr('size')) - 2 }}"
+
+- name: Calculate reserved IP ranges for DHCP
+  ansible.builtin.set_fact:
+    # Total IPs to reserve (25% of usable)
+    total_reserved: "{{ (usable_ip_count * 0.80) | round | int }}"
+    # IPs to reserve at the beginning of the subnet (~12.5%)
+    reserved_at_start: "{{ (total_reserved / 2) | round | int }}"
+    # IPs to reserve at the end of the subnet (~12.5%)
+    reserved_at_end: "{{ (total_reserved / 2) | round | int }}"
+
+- name: Set DHCP pool start and end addresses
+  ansible.builtin.set_fact:
+    # DHCP pool starts after the reserved IPs at the beginning
+    dhcp_lan_ip_pool_start: "{{ first_usable_ip | ansible.utils.ipmath(reserved_at_start) }}"
+    # DHCP pool ends before the reserved IPs at the end
+    dhcp_lan_ip_pool_end: "{{ last_usable_ip | ansible.utils.ipmath(-reserved_at_end) }}"
+
 - name: Install Kea DHCPv4 server
   ansible.builtin.apt:
     package: kea-dhcp4-server

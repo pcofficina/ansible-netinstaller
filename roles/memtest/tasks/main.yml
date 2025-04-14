@@ -12,7 +12,7 @@
   ansible.builtin.get_url:
     url: "{{ memtest_archive_url }}"
     dest: "{{ memtest_basedir }}"
-    checksum: "sha256:{{ memtest_archive_256sum }}"
+    checksum: "sha256:{{ memtest_archive_sha256 }}"
     mode: '0644'
 
 - name: Install zip

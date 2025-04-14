@@ -1,4 +1,25 @@
-# List of rule IDs to be skipped entirely
+---
+# .ansible-lint configuration
+exclude_paths:
+  - .github/
+  - .cache/
+  - .pre-commit-config.yaml
+  - playbooks/legacy/
+
+# Enable specific rules
+# enable_list:
+#   - name[casing]
+#   - jinja[spacing]
+#   - yaml[line-length]
+#   - var-naming[no-upper-case]
+
+# Disable specific rules
 skip_list:
+  - meta-no-tags  # Allow roles without tags
+  - name[template]  # Allow complex templating in task names
   - package-latest  # Ignore warnings about using state=latest for package managers
-  # - another-rule-id # You can add other rules here too
+
+# Set warning level for specified rules
+warn_list:
+  - fqcn[action-core]  # Warn about non-FQCN module names
+  - experimental  # Enable experimental rules

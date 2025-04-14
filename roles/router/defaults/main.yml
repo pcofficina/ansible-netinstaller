@@ -1,4 +1,4 @@
 ---
 # defaults file for role/nftables
-network_lan_net: 192.168.100.0
-network_lan_netmask: 24
+network_lan_net: 192.168.100.0  # noqa: var-naming[no-role-prefix]
+network_lan_netmask: 24         # noqa: var-naming[no-role-prefix]

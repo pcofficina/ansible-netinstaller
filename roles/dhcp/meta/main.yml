@@ -1,19 +1,9 @@
+---
 galaxy_info:
   author: Andrea Perotti
   description: Role to install and configure kea-dhcpd
   company: Associazione PCOfficina
 
-  # If the issue tracker for your role is not on github, uncomment the
-  # next line and provide a value
-  # issue_tracker_url: http://example.com/issue/tracker
-
-  # Choose a valid license ID from https://spdx.org - some suggested licenses:
-  # - BSD-3-Clause (default)
-  # - MIT
-  # - GPL-2.0-or-later
-  # - GPL-3.0-only
-  # - Apache-2.0
-  # - CC-BY-4.0
   license: GPL-3.0-only
 
   min_ansible_version: '2.16'
@@ -38,7 +28,6 @@ galaxy_info:
   galaxy_tags:
     - dhcp
     - kea
-    - kea-dhcpd
     - networking
 
 dependencies:

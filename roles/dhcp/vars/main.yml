@@ -1,2 +1,3 @@
 ---
 # vars file for role/dhcp
+dhcp_apparmor_conf: /etc/apparmor.d/usr.sbin.kea-dhcp4

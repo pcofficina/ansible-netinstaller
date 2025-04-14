@@ -1,3 +1,3 @@
 ---
 # defaults file for role/tftp
-ipxe_basedir: "{{ basepath_dir }}/ipxe"
+ipxe_basedir: "{{ basepath_dir }}/ipxe" # noqa: var-naming[no-role-prefix]

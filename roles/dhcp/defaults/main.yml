@@ -4,7 +4,5 @@ dhcp_lan_ip: 192.168.192.1
 dhcp_lan_net: 192.168.192.0
 dhcp_lan_netmask: 24
 dhcp_lan_interface: eth0
-dhcp_lan_ip_pool_start: 192.168.192.99
-dhcp_lan_ip_pool_end: 192.168.192.199
-
-dhcp_apparmor_conf: /etc/apparmor.d/usr.sbin.kea-dhcp4
+# dhcp_lan_ip_pool_start: 192.168.192.99
+# dhcp_lan_ip_pool_end: 192.168.192.199

@@ -1,0 +1,8 @@
+---
+# defaults file for role/dhcp
+# dns_lan_ip: "{{ server_lan_ip }}"
+dns_lan_net: "{{ server_lan_net }}"
+dns_lan_netmask: "{{ server_lan_netmask }}"
+dns_lan_interface: "{{ server_lan_interface }}"
+# dhcp_lan_ip_pool_start: 192.168.192.99
+# dhcp_lan_ip_pool_end: 192.168.192.199

@@ -1,5 +1,11 @@
 ---
 # defaults file for common_vars
+# used in dhcp and dns roles
+server_lan_ip: 192.168.192.1 # noqa: var-naming[no-role-prefix]
+server_lan_net: 192.168.192.0 # noqa: var-naming[no-role-prefix]
+server_lan_netmask: 24 # noqa: var-naming[no-role-prefix]
+server_lan_interface: eth0 # noqa: var-naming[no-role-prefix]
+
 basepath_dir: "/install" # noqa: var-naming[no-role-prefix]
 iso_linuxmint_dir: "mint" # noqa: var-naming[no-role-prefix]
 iso_win11_dir: "win11" # noqa: var-naming[no-role-prefix]

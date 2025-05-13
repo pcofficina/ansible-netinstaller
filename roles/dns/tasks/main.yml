@@ -1,0 +1,23 @@
+---
+# tasks file for role/dhcp
+- name: Install Unbound server
+  ansible.builtin.apt:
+    package: unbound
+    state: latest
+    install_recommends: false
+    fail_on_autoremove: true
+
+- name: Deploy Unbound server configuration
+  ansible.builtin.template:
+    src: templates/base.conf.j2
+    dest: /etc/unbound/unbound.conf.d/base.conf
+    mode: "0644"
+    validate: /usr/sbin/unbound-checkconf
+    backup: true
+  notify: Restart DNS resolver
+
+- name: Ensure Unbound server is enabled and running
+  ansible.builtin.service:
+    name: unbound
+    enabled: true
+    state: started

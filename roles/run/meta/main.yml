@@ -22,6 +22,7 @@ dependencies:
   - role: pcofficina.netinstaller.apt_update_cache
   - role: pcofficina.netinstaller.basepath
   - role: pcofficina.netinstaller.network
+  - role: pcofficina.netinstaller.dns
   - role: pcofficina.netinstaller.dhcp
   - role: pcofficina.netinstaller.router
   - role: pcofficina.netinstaller.memtest

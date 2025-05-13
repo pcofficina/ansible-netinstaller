@@ -12,7 +12,7 @@
     src: templates/base.conf.j2
     dest: /etc/unbound/unbound.conf.d/base.conf
     mode: "0644"
-    validate: /usr/sbin/unbound-checkconf
+    validate: /usr/sbin/unbound-checkconf %s
     backup: true
   notify: Restart DNS resolver
 

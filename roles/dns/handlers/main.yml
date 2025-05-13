@@ -1,0 +1,6 @@
+---
+# handlers file for role/dhcp
+- name: Restart DNS resolver
+  ansible.builtin.service:
+    name: unbound
+    state: restarted

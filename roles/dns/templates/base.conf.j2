@@ -1,0 +1,15 @@
+server:
+	verbosity: 2
+	interface: "{{ dns_lan_interface }}"
+    prefer-ip6: no
+	prefer-ip4: yes
+	ip-transparent: yes
+	access-control: "{{ dns_lan_net }}/{{ dns_lan_netmask }}" allow
+
+	private-address: 10.0.0.0/8
+        private-address: 172.16.0.0/12
+        private-address: 192.168.0.0/16
+        private-address: 169.254.0.0/16
+        private-address: fd00::/8
+        private-address: fe80::/10
+        private-address: ::ffff:0:0/96

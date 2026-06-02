@@ -23,25 +23,25 @@
     get_attributes: false
     get_checksum: false
     get_mime: false
-  register: iso_file_status
+  register: iso_linuxmint_file_status
 
 # - name: Check if ISO file is missing
 #   ansible.builtin.set_fact:
-#     iso_file_missing: "{{ not iso_file_status.stat.exists }}"
+#     iso_file_missing: "{{ not iso_linuxmint_file_status.stat.exists }}"
 #   changed_when: iso_file_missing
 
 - name: Stop NFS service
   ansible.builtin.systemd_service:
     name: nfs-server
     state: stopped
-  register: nfs_stop_result
-  when: iso_file_status.stat.exists
+  register: iso_linuxmint_nfs_stop_result
+  when: iso_linuxmint_file_status.stat.exists
 
 - name: Umount ISO {{ iso_linuxmint_filename }}
   ansible.posix.mount:
     path: "{{ iso_linuxmint_basepath_dir }}/iso"
     state: unmounted
-  when: iso_file_status.stat.exists and nfs_stop_result.state == "stopped"
+  when: iso_linuxmint_file_status.stat.exists and  iso_linuxmint_nfs_stop_result.state == "stopped"
 
 - name: Copy preseed files
   ansible.builtin.copy:

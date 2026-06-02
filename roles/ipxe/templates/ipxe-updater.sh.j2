@@ -1,7 +1,6 @@
 #!/bin/sh
 
 IPXE_URL="https://boot.ipxe.org"
-# IPXE_FILE_LIST="ipxe.efi ipxe.pxe"
 IPXE_FILE_LIST="{{ ipxe_file_list | join(' ') }}"
 TODAY=`date +%Y%m%d`
 TFTP_BOOT={{ ipxe_basedir }}
@@ -14,5 +13,10 @@ else
 fi
 
 for IPXE_FILE in $IPXE_FILE_LIST; do
-        curl $IPXE_URL/$IPXE_FILE  -o $IPXE_FILE.$TODAY && rm -f $IPXE_FILE && ln $IPXE_FILE.$TODAY $IPXE_FILE
+    # This strips everything up to the last slash (e.g., "x86_64-efi/ipxe.efi" becomes "ipxe.efi")
+    FILENAME="${IPXE_FILE##*/}"
+
+    curl "$IPXE_URL/$IPXE_FILE" -o "$FILENAME.$TODAY" && \
+    rm -f "$FILENAME" && \
+    ln "$FILENAME.$TODAY" "$FILENAME"
 done
